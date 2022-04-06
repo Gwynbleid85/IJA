@@ -1,5 +1,5 @@
 package ija.app.uml;
-
+import java.util.*;
 public class UMLClass {
 	
 	private String name;

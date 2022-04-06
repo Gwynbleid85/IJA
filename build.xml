@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ija-projekt" default="compile" basedir=".">
+  <description>
+    IJA projekt - aplikace pro zobrazení a editaci diagramů tříd a sekvenčního diagramu
+  </description>
+
+  <property name="src" location="src"/>
+  <property name="data" location="data"/>
+  <property name="build" location="build"/>
+  <property name="doc" location="doc"/>
+  <property name="dest" location="dest"/> <!-- adresar spustitelne aplikace -->
+  <property name="lib" location="lib"/>
+  <property name="jar_name" value="IJA-app"/> <!-- nazev vysledneho jar archivu -->
+
+  <path id="classpath">
+    <pathelement location="${build}"/> <!-- zde .class soubory -->
+    <pathelement location="${dest}"/> <!-- zde je jar archiv -->
+    <pathelement location="${lib}"/> <!-- zde je jar archiv -->
+  </path>
+
+
+  <!-- Target pro vycisteni potrebnych slozek -->
+  <target name="clean">
+    <delete dir="${build}"/>
+    <delete dir="${doc}"/>
+    <delete dir="${dest}"/>
+    <mkdir dir="${build}"/>
+    <mkdir dir="${doc}"/>
+    <mkdir dir="${dest}"/>
+  </target>
+
+  <!-- Target pro zkompilovani -->
+  <target name="compile" depends="clean" description="Compile">
+
+  <!--- 
+    <junit printsummary="yes" haltonfailure="yes">
+    <classpath>
+        <path refid="classpath"/>
+        <fileset dir="${lib}">
+            <include name="*.jar" />
+        </fileset>
+    </classpath>
+    </junit>
+  -->
+
+    <javac srcdir="${src}" destdir="${build}" includeantruntime="false">
+      <classpath>
+        <path refid="classpath" /> <!-- Predem definovane -->
+      </classpath>
+    </javac>
+
+    <jar destfile="${dest}\${jar_name}.jar" basedir="${build}">
+      <manifest>
+        <attribute name="Main-Class" value="ija.app.Main"/>
+      </manifest>
+      <zipgroupfileset dir="${lib}" includes="**/*.jar"/> <!-- Zkopirovani obsahu knihoven ve slozce s knihovnami do jaru-->
+    </jar>
+  </target>
+
+  <!-- Target pro vygenerovani dokumentace -->
+  <target name="docs" depends="compile">
+    <javadoc sourcepath="${src}" destdir="${doc}">
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </javadoc>
+  </target>
+
+  <!-- Target pro spusteni aplikace -->
+  <target name="run">
+    <java jar="${dest}/${jar_name}.jar" fork="true"/>
+  </target>
+
+  <!-- Target pro spusteni testu -->
+  <target name="run_tests" depends="compile">
+    <junit>  
+      <test name="ija.app.AppTest"/>  
+    </junit>  
+  </target>
+  
+</project>
