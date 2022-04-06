@@ -3,7 +3,8 @@ package ija.app.uml;
 import java.util.*;
 public class ClassDiagram extends Element{
 	
-	private Set<UMLClassifier> classifiers;
+	private Set<UMLClass> classes;
+	private Set<UMLRelation> relations;
 
 	public ClassDiagram(java.lang.String name){
 		super(name);
