@@ -5,7 +5,6 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("IJA project");
-        ClassDiagram classdiagram = new ClassDiagram("diagram");
+        System.out.println("Project main class running.");
     }
 }

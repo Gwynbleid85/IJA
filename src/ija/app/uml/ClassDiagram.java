@@ -1,25 +1,43 @@
 package ija.app.uml;
-
 import java.util.*;
+
+
+
 public class ClassDiagram {
 	
 	private Set<UMLClass> classes;
 	private Set<UMLRelation> relations;
 
-	public ClassDiagram(java.lang.String name){
-		//super(name);
-		//this.classifiers = new HashSet<UMLClassifier> ();
+	public ClassDiagram(Set<UMLClass> classes, Set<UMLRelation> relations){ //todo: should have a name?
+		this.classes = classes;
+		this.relations = relations;
+	} 
+
+
+	public void addClass(UMLClass newClass){
+
+		this.classes.add(newClass);
 	}
 
-	public UMLClass createClass(java.lang.String name) {
+	public void removeClass(UMLClass newClass){
+		this.classes.remove(newClass);
+	}
 
-		UMLClass newClass = new UMLClass(name);
-		/*
-		if(this.classifiers.contains(newClass))
-			return null;
-		
-		this.classifiers.add(newClass);
-		*/
+	public void addRelation(UMLRelation newRelation){
+
+		this.relations.add(newRelation);
+	}
+
+	public void removeRelation(UMLRelation newRelation){
+		this.relations.remove(newRelation);
+	}
+
+	/*
+	public UMLClass createClass(String name, boolean isInterface) {
+
+		UMLClass newClass = new UMLClass(name, isInterface);
+		this.classes.add(newClass);
 		return newClass;
 	}
+	*/
 }
