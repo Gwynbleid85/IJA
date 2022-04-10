@@ -2,12 +2,12 @@ package ija.app.uml;
 
 public class UMLRelation {
     private String type;
-    private UMLClass from;
-    private UMLClass to;
+    private String from;
+    private String to;
     private String cardinalityFrom;
     private String cardinalityTo;
 
-    public UMLRelation(String type, UMLClass from, UMLClass to, String cardinalityFrom, String cardinalityTo){
+    public UMLRelation(String type, String from, String to, String cardinalityFrom, String cardinalityTo){
 		this.type = type;
 		this.from = from;
 		this.to = to;
@@ -23,19 +23,19 @@ public class UMLRelation {
         this.type = type;
     }
 
-    public UMLClass getFrom(){
+    public String getFrom(){
         return from;
     }
 
-    public void setFrom(UMLClass from){
+    public void setFrom(String from){
         this.from = from;
     }
 
-    public UMLClass getTo(){
+    public String getTo(){
         return to;
     }
 
-    public void setTo(UMLClass to){
+    public void setTo(String to){
         this.to = to;
     }
 
