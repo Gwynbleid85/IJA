@@ -1,5 +1,4 @@
-package ija.app.uml;
-
+package ija.app.uml.classDiagram;
 public class UMLRelation {
     private String type;
     private String from;

@@ -1,4 +1,4 @@
-package ija.app.uml;
+package ija.app.uml.sequenceDiagram;
 
 public class UMLMessage {
     private String from;

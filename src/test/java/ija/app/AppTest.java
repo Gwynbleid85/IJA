@@ -5,7 +5,7 @@
  */
 package ija.app;
 
-import ija.app.uml.UMLClassAttribute;
+import ija.app.uml.classDiagram.UMLClassAttribute;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;

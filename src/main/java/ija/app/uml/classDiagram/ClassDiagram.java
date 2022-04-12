@@ -1,10 +1,10 @@
-package ija.app.uml;
+package ija.app.uml.classDiagram;
 import java.util.*;
 
 
 
 public class ClassDiagram {
-	
+
 	private Set<UMLClass> classes;
 	private Set<UMLRelation> relations;
 
