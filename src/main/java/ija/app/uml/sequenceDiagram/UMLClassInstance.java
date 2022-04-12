@@ -4,70 +4,63 @@ import ija.app.uml.classDiagram.UMLClassDiagram;
 
 
 public class UMLClassInstance {
-    private String name; //name will be concatenated from instance name, ':' and class name
+    private String name;
     private String className;
+    //final id will be concatenated from name, ':' and classname
     private UMLClassDiagram classDiagram;
 
-    public UMLClassInstance(UMLClassDiagram classDiagram, String instanceName, String uMLClassName) {
-        if (classDiagram.getClasses().contains(uMLClassName)) { //TODO
-            this.instanceName = instanceName;
-            this.uMLClassName = uMLClassName;
-            this.id = instanceName + ":" + uMLClassName;
-        }
-        //pokud ne, tak se jen nevytvori
+    /**
+     * Constructor of UMLClassInstance
+     * @param classDiagram Class diagram, that UMLClassInstance refers to
+     * @param name Name of instance
+     * @param className Name of class to which instance refers to
+     */
+    public UMLClassInstance(UMLClassDiagram classDiagram, String name, String className) {
+        this.name = name;
+        this.className = className;
     }
 
-    public String getId(){
-        return this.id;
+    public String createId(){
+        return name + ":" + className;
     }
 
-    public void setId(String id){
-        this.id = id;
+    public String getClassName(){
+        return className;
     }
 
-    public String getuMLClassName(){
-        return this.uMLClassName;
+    public void setClassName(String className){
+        this.className = className;
     }
 
-    public void setuMLClassName(String uMLClassName){
-        this.uMLClassName = uMLClassName;
+    public String getName(){
+        return name;
     }
 
-    public String getInstanceName(){
-        return this.instanceName;
+    public void setName(String name){
+        this.name = name;
     }
 
-    public void setInstanceName(String instanceName){
-        this.instanceName = instanceName;
+    public UMLClassDiagram getClassDiagram(){
+        return classDiagram;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    //TODO:consistency
 
     @Override
     public boolean equals(Object o) {
 
         if(o instanceof UMLClassInstance){
             UMLClassInstance toCompare = (UMLClassInstance) o;
-            return this.id.equals(toCompare.id);
+            String id = name + ":" + className;
+            String idCompare = toCompare.name + ":" + toCompare.className;
+            return id.equals(idCompare);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return this.id.hashCode();
+        String id = name + ":" + className;
+        return id.hashCode();
     }
 }

@@ -98,39 +98,52 @@ public class AppTest {
 
 	@Test
 	public void testUMLClassInstance(){
-		UMLClassDiagram cd = new UMLClassDiagram(); //todo
-		//TODO vytvoreni trid, pridani do diagramu
-		//TODO vytvoreni UMLClassInstance
-
-
+		UMLClassDiagram cd = new UMLClassDiagram();
+		UMLClassInstance classInstance = new UMLClassInstance(cd, "c1", "Car");
+		Assert.assertEquals("Test creating id", classInstance.createId(), "c1:Car");
+		Assert.assertEquals("Test name", classInstance.getName(), "c1");
+		Assert.assertEquals("Test class name", classInstance.getClassName(), "Car");
+		/*Test changing value of attributes*/
+		classInstance.setName("c5");
+		classInstance.setClassName("Bus");
+		Assert.assertEquals("Test changed name", classInstance.getName(), "c5");
+		Assert.assertEquals("Test changed class name", classInstance.getClassName(), "Bus");
+		/*Test equality of classInstances*/
+		UMLClassInstance classInstance2 = new UMLClassInstance(cd, "c5", "Bus");
+		Assert.assertEquals("Test comparing 2 class instances", classInstance, classInstance2);
 
 	}
 
 	@Test
 	public void testUMLMessage(){
-		UMLClassDiagram cd = new UMLClassDiagram(); //todo
-		//TODO vytvoreni trid, pridani do diagramu
+		UMLClassDiagram cd = new UMLClassDiagram();
 		UMLMessage msg = new UMLMessage(cd, "class1", "class2", "Count max");
 
 		Assert.assertEquals("Test UMLMessage value", msg.getMessage(), "Count max");
+		Assert.assertEquals("Test UMLMessage 'from' class", msg.getFrom(), "class1");
+		Assert.assertEquals("Test UMLMessage 'to' class", msg.getTo(), "class2");
+		/*Test changing value of message*/
 		msg.setMessage("Count min");
 		Assert.assertEquals("Test UMLMessage new value", msg.getMessage(), "Count min");
-		Assert.assertEquals("Test UMLMessage 'from' class", msg.getFrom(), "class1");
 		msg.setFrom("Car");
 		Assert.assertEquals("Test UMLMessage new 'from' class", msg.getFrom(), "Car");
-		Assert.assertEquals("Test UMLMessage 'to' class", msg.getTo(), "class2");
 		msg.setTo("Bus");
 		Assert.assertEquals("Test UMLMessage new 'to' class", msg.getTo(), "Bus");
 
-
-		//TODO create new message with a class that doesnt exist
 	}
 
 	@Test
 	public void testSequenceDiagram() {
-		SequenceDiagram sd = new SequenceDiagram("sd1");
+		UMLClassDiagram cd = new UMLClassDiagram();
+		UMLSequenceDiagram sd = new UMLSequenceDiagram("sd1", cd);
 		Assert.assertEquals("Test sequence diagram name", sd.getName(), "sd1");
+		/*Test changing value of sequence diagram*/
 		sd.setName("sd2");
 		Assert.assertEquals("Test sequence diagram new name", sd.getName(), "sd2");
+		/*Test UMLClassInstance*/
+		Assert.assertTrue("Test add new instance", sd.addInstance(new UMLClassInstance(cd, "c1", "Car")));
+		Assert.assertFalse("Test add existing instance", sd.addInstance(new UMLClassInstance(cd, "c1", "Car")));
+		/*Test UMLMessage*/
+
 	}
 }

@@ -6,27 +6,24 @@ public class UMLMessage {
     private String from;
     private String to;
     private String message;
+    private UMLClassDiagram classDiagram;
 
+    /**
+     * Constructor of UMLMesssage
+     * @param classDiagram Class diagram, that UMLMessage refers to
+     * @param from Name of class, from which message goes
+     * @param to Name of class, to which message goes
+     * @param message Content of message
+     */
     public UMLMessage(UMLClassDiagram classDiagram, String from, String to, String message){
-
-        if (classDiagram.getClasses().contains(from)) { //TODO
-            this.from = from;
-        }
-
-        if (classDiagram.getClasses().contains(to)) { //TODO
-            this.to = to;
-        }
-
-        for (int i = 0; i < UMLClassDiagram.getClasses().size(); i++){
-            if (UMLClassDiagram.getClasses().get(i).equals(from)) {
-                if(UMLClassDiagram.getClasses().get(i).getMethods().contains(message))
-                    this.message = message;
-            }
-        }
+        this.from = from;
+        this.to = to;
+        this.message = message;
+        this.classDiagram = classDiagram;
     }
 
     public String getFrom(){
-        return this.from;
+        return from;
     }
 
     public void setFrom(String from){
@@ -34,7 +31,7 @@ public class UMLMessage {
     }
 
     public String getTo(){
-        return this.to;
+        return to;
     }
 
     public void setTo(String to){
@@ -42,13 +39,14 @@ public class UMLMessage {
     }
 
     public String getMessage(){
-        return this.message;
+        return message;
     }
 
     public void setMessage(String message){
         this.message = message;
     }
 
-
-
+    public UMLClassDiagram getClassDiagram(){
+        return classDiagram;
+    }
 }

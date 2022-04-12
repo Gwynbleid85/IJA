@@ -26,7 +26,7 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- Zavislost pro javafx -->
+    <!-- Javafx dependency -->
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
@@ -56,6 +56,7 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.22.1</version>
         </plugin>
+
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <configuration>
@@ -63,12 +64,22 @@
             <archive>
               <manifest>
                 <addClasspath>true</addClasspath>
-                <mainClass>ija.app.Homework3</mainClass>
+                <mainClass>ija.app.MainTest</mainClass>
               </manifest>
             </archive>
           </configuration>
+
+          <executions>
+            <execution>
+              <goals>
+                <goal>test-jar</goal>
+              </goals>
+            </execution>
+          </executions>
+
           <version>3.0.2</version>
         </plugin>
+
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
           <version>2.5.2</version>
@@ -87,13 +98,33 @@
           <version>3.0.0</version>
         </plugin>
 
-        <!-- Plugin pro javafx -->
+        <!-- Javafx plugin -->
         <plugin>
           <groupId>org.openjfx</groupId>
           <artifactId>javafx-maven-plugin</artifactId>
           <version>0.0.1</version>
           <configuration>
             <mainClass>ija.app.App</mainClass>
+          </configuration>
+        </plugin>
+
+        <!-- Javadocs plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.3.2</version>
+          <executions>
+            <execution>
+              <id>attach-javadocs</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <destDir>doc</destDir>
+            <show>private</show>
+            <nohelp>true</nohelp>
           </configuration>
         </plugin>
 
