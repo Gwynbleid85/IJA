@@ -10,7 +10,11 @@ public class UMLClassAttribute {
 		this.datatype = datatype;
 		this.accessMod = accessMod;
 	}
-
+	public UMLClassAttribute(String name){
+		this.name = name;
+		this.datatype = "";
+		this.accessMod = "";
+	}
 	public String getName(){
 		return name;
 	}
@@ -33,5 +37,18 @@ public class UMLClassAttribute {
 
 	public void setAccessMod(String accessMod){
 		this.accessMod = accessMod;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if(! (o instanceof UMLClassAttribute)) return false;
+
+		UMLClassAttribute c = (UMLClassAttribute) o;
+		return this.name.equals(c.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return this.name.hashCode();
 	}
 }

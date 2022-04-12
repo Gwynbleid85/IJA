@@ -11,11 +11,15 @@ public class ClassDiagram {
 	public ClassDiagram(Set<UMLClass> classes, Set<UMLRelation> relations){ //todo: should have a name?
 		this.classes = classes;
 		this.relations = relations;
-	} 
+	}
+
+	public ClassDiagram(){ //todo: should have a name?
+		this.classes = new HashSet<UMLClass>();
+		this.relations = new HashSet<UMLRelation>();
+	}
 
 
 	public void addClass(UMLClass newClass){
-
 		this.classes.add(newClass);
 	}
 
@@ -24,7 +28,6 @@ public class ClassDiagram {
 	}
 
 	public void addRelation(UMLRelation newRelation){
-
 		this.relations.add(newRelation);
 	}
 
@@ -32,12 +35,20 @@ public class ClassDiagram {
 		this.relations.remove(newRelation);
 	}
 
-	/*
-	public UMLClass createClass(String name, boolean isInterface) {
 
-		UMLClass newClass = new UMLClass(name, isInterface);
-		this.classes.add(newClass);
-		return newClass;
+	public List<UMLClassMethod> getUMLClassOwnMethods(String className){
+		if(! classes.contains(new UMLClass(className)))
+			return null;
+		return new LinkedList<UMLClassMethod>();
 	}
-	*/
+
+	public List<UMLClassMethod> getUMLClassInheritedMethods(String ClassName){
+		return new LinkedList<UMLClassMethod>();
+	}
+
+	public Set<UMLClass> getClasses(){
+		return Collections.unmodifiableSet(classes);
+	}
+
+
 }
