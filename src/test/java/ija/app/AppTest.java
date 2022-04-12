@@ -11,6 +11,9 @@ import ija.app.uml.sequenceDiagram.*;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+
 /**
  * todo: rewrite
  * Testovací třída pro první úkol z předmětu IJA (2021/22).
@@ -88,8 +91,68 @@ public class AppTest {
 	}
 
 	/**
+	 * Test UMLRelation
+	 */
+	@Test
+	public void testUMLRelation(){
+		UMLRelation u = new UMLRelation("asdf");
+		Assert.assertEquals("Test empty from list", u.getFrom(), new LinkedList<String>());
+		Assert.assertNull("Test empty to attribute", u.getFrom());
+
+		Assert.assertTrue("Test insert new element from", u.addToFrom("1"));
+		Assert.assertFalse("Test insert existing element to from", u.addToFrom("1"));
+
+		Assert.assertTrue("Test insert list of new elements to from", u.addToFrom(new LinkedList<String>(Arrays.asList("2", "3", "4"))));
+		Assert.assertFalse("Test insert list of existing elements to from", u.addToFrom(new LinkedList<String>(Arrays.asList("3", "4", "5"))));
+
+		Assert.assertTrue("Test delete existing element from from", u.delFrom("3"));
+		Assert.assertFalse("Test if element was deleted", u.getFrom().contains("3"));
+
+		Assert.assertFalse("Test delete non existing element from from", u.delFrom("100"));
+
+	}
+
+	/**
+	 * Test UMLClassDiagram
+	 */
+	@Test
+	public void testUMLClassDiagram(){
+		UMLClassDiagram d = new UMLClassDiagram();
+
+		Assert.assertTrue("Test insert new UMLClass", d.addClass(new UMLClass("a")));
+		Assert.assertFalse("Test insert existing UMLClass", d.addClass(new UMLClass("a")));
+		Assert.assertTrue("Test remove existing UMLClass", d.delClass("a"));
+		Assert.assertTrue("Test remove non existing UMLClass", d.delClass("a"));
+		Assert.assertTrue("Test insert new UMLRelation", d.addRelation(new UMLRelation("b")));
+		Assert.assertTrue("Test remove existing UMLRelation", d.delRelation(new UMLRelation("b")));
+		Assert.assertTrue("Test relation list is empty", d.getRelations().isEmpty());
+
+		UMLClass a = new UMLClass("a");
+		a.addAttribute(new UMLClassAttribute("a"));
+		a.addMethod(new UMLClassMethod("aa"));
+
+		UMLClass b = new UMLClass("b");
+		b.addAttribute(new UMLClassAttribute("b"));
+		b.addMethod(new UMLClassMethod("bb"));
+
+		UMLRelation r = new UMLRelation("in");
+		r.setTo(b.getName());
+		r.addToFrom(a.getName());
+
+		d.addClass(a);
+		d.addClass(b);
+
+		d.addRelation(r);
+
+		Assert.assertTrue("Test get inherited methods", d.getUMLClassInheritedMethods("a").contains(new UMLClassMethod("bb")));
+
+	}
+
+
+	/**
 	 * Test UMLrelations
 	 */
+	/*
 	@Test
 	public void testUMLRelation(){
 		UMLRelation u = new UMLRelation("asdf");
@@ -146,4 +209,6 @@ public class AppTest {
 		/*Test UMLMessage*/
 
 	}
+	 */
 }
+

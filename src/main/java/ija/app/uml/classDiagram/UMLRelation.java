@@ -82,7 +82,7 @@ public class UMLRelation {
 	 * @param from New element to be added to this.from list
 	 * @return False if given element already in this.from list, True otherwise
 	 */
-	public boolean setFrom(String from){
+	public boolean addToFrom(String from){
 		if(! this.from.contains(from))
 			return false;
 		return this.from.add(from);
@@ -93,7 +93,7 @@ public class UMLRelation {
 	 * @param from List to be appended
 	 * @return False if some element from given list exists in this.from, True otherwise
 	 */
-	public boolean setFrom(List<String> from){
+	public boolean addToFrom(List<String> from){
 		/* Make intersect of this.from and from*/
 		Set<String> result = from.stream()
 				.distinct()
@@ -103,5 +103,14 @@ public class UMLRelation {
 		if(!result.isEmpty())
 			return false;
 		return this.from.addAll(from);
+	}
+
+	/**
+	 * Method to delete elements from from attribute
+	 * @param from Attribute to be deleted
+	 * @return False in given element doesn't exists, true otherwise
+	 */
+	public boolean delFrom(String from){
+		return this.from.remove(from);
 	}
 }

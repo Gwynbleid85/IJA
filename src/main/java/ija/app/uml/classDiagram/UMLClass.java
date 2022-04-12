@@ -1,6 +1,7 @@
 package ija.app.uml.classDiagram;
 import java.util.*;
 public class UMLClass {
+	private String name;
 	private  List<UMLClassAttribute> attributes;
 	private  List<UMLClassMethod> methods;
 	private boolean isInterface;
@@ -11,9 +12,9 @@ public class UMLClass {
 	 * @param isInterface Is created UMLClass interface?
 	 */
 	public UMLClass(String name, boolean isInterface){
+		this.name = name;
 		attributes = new LinkedList<UMLClassAttribute>();
 		methods = new LinkedList<UMLClassMethod>();
-
 	}
 
 	/**
@@ -22,9 +23,26 @@ public class UMLClass {
 	 * @note Default value of isInterface attribute is False
 	 */
 	public UMLClass(String name){
+		this.name = name;
 		attributes = new LinkedList<UMLClassAttribute>();
 		methods = new LinkedList<UMLClassMethod>();
 		isInterface = false;
+	}
+
+	/**
+	 * Getter of attribute name
+	 * @return Value of attribute name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Setter of attribute name
+	 * @param name New value for attribute name
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
@@ -97,5 +115,19 @@ public class UMLClass {
 	 */
 	public List<UMLClassMethod> getMethods(){
 		return Collections.unmodifiableList(methods);
+	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if(! (o instanceof UMLClass)) return false;
+
+		UMLClass c = (UMLClass) o;
+		return this.name.equals(c.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return this.name.hashCode();
 	}
 }
