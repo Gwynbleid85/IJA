@@ -1,6 +1,6 @@
 package ija.app.uml.sequenceDiagram;
 
-import ija.app.uml.classDiagram.UMLClass;
+import ija.app.uml.classDiagram.UMLClassDiagram;
 
 import java.util.*;
 
@@ -9,12 +9,13 @@ public class SequenceDiagram {
     private String name;
     private List<UMLClassInstance> instances;
     private List<UMLMessage> messages;
+    private UMLClassDiagram classDiagram;
 
-
-    public SequenceDiagram(String name){
+    public SequenceDiagram(String name, UMLClassDiagram classDiagram){
         this.name = name;
         this.instances = new LinkedList<UMLClassInstance>();
         this.messages = new LinkedList<UMLMessage>();
+        this.classDiagram = classDiagram;
     }
 
     public String getName(){
@@ -43,6 +44,9 @@ public class SequenceDiagram {
         }
     }
 
+    public void asdf(){
+        classDiagram.getUMLClassOwnMethods("asdf");
+    }
     public boolean removeClassInstance(UMLClassInstance newInstance){
         return this.instances.remove(newInstance);
     }

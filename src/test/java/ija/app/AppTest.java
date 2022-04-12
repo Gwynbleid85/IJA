@@ -1,4 +1,5 @@
 /*
+ * todo:rewrite
  * IJA 2021/22: Úloha č. 1
  * Testovací třída pro JUnit.
  * (C) rk
@@ -7,11 +8,8 @@ package ija.app;
 
 import ija.app.uml.classDiagram.*;
 import ija.app.uml.sequenceDiagram.*;
-import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
-import ija.app.uml.classDiagram.*;
-import org.junit.Assert;
 
 /**
  * todo: rewrite
@@ -100,7 +98,7 @@ public class AppTest {
 
 	@Test
 	public void testUMLClassInstance(){
-		ClassDiagram cd = new ClassDiagram(); //todo
+		UMLClassDiagram cd = new UMLClassDiagram(); //todo
 		//TODO vytvoreni trid, pridani do diagramu
 		//TODO vytvoreni UMLClassInstance
 
@@ -110,7 +108,7 @@ public class AppTest {
 
 	@Test
 	public void testUMLMessage(){
-		ClassDiagram cd = new ClassDiagram(); //todo
+		UMLClassDiagram cd = new UMLClassDiagram(); //todo
 		//TODO vytvoreni trid, pridani do diagramu
 		UMLMessage msg = new UMLMessage(cd, "class1", "class2", "Count max");
 

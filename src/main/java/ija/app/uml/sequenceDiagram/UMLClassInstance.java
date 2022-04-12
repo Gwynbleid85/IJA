@@ -1,17 +1,14 @@
 package ija.app.uml.sequenceDiagram;
 
-import ija.app.uml.classDiagram.ClassDiagram;
-import ija.app.uml.classDiagram.UMLClass;
-
-import java.util.Objects;
+import ija.app.uml.classDiagram.UMLClassDiagram;
 
 
 public class UMLClassInstance {
-    private String instanceName; //name will be concatenated from instance name, ':' and class name
-    private String uMLClassName;
-    private String id;
+    private String name; //name will be concatenated from instance name, ':' and class name
+    private String className;
+    private UMLClassDiagram classDiagram;
 
-    public UMLClassInstance(ClassDiagram classDiagram, String instanceName, String uMLClassName) {
+    public UMLClassInstance(UMLClassDiagram classDiagram, String instanceName, String uMLClassName) {
         if (classDiagram.getClasses().contains(uMLClassName)) { //TODO
             this.instanceName = instanceName;
             this.uMLClassName = uMLClassName;

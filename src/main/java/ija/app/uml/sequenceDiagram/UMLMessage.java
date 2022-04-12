@@ -1,13 +1,13 @@
 package ija.app.uml.sequenceDiagram;
 
-import ija.app.uml.classDiagram.ClassDiagram;
+import ija.app.uml.classDiagram.UMLClassDiagram;
 
 public class UMLMessage {
     private String from;
     private String to;
     private String message;
 
-    public UMLMessage(ClassDiagram classDiagram, String from, String to, String message){
+    public UMLMessage(UMLClassDiagram classDiagram, String from, String to, String message){
 
         if (classDiagram.getClasses().contains(from)) { //TODO
             this.from = from;
@@ -17,9 +17,9 @@ public class UMLMessage {
             this.to = to;
         }
 
-        for (int i = 0; i < ClassDiagram.getClasses().size(); i++){
-            if (ClassDiagram.getClasses().get(i).equals(from)) {
-                if(ClassDiagram.getClasses().get(i).getMethods().contains(message))
+        for (int i = 0; i < UMLClassDiagram.getClasses().size(); i++){
+            if (UMLClassDiagram.getClasses().get(i).equals(from)) {
+                if(UMLClassDiagram.getClasses().get(i).getMethods().contains(message))
                     this.message = message;
             }
         }

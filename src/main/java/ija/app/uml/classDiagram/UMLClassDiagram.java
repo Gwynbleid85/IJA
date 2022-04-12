@@ -3,17 +3,17 @@ import java.util.*;
 
 
 
-public class ClassDiagram {
+public class UMLClassDiagram {
 
 	private Set<UMLClass> classes;
 	private Set<UMLRelation> relations;
 
-	public ClassDiagram(Set<UMLClass> classes, Set<UMLRelation> relations){ //todo: should have a name?
+	public UMLClassDiagram(Set<UMLClass> classes, Set<UMLRelation> relations){ //todo: should have a name?
 		this.classes = classes;
 		this.relations = relations;
 	}
 
-	public ClassDiagram(){ //todo: should have a name?
+	public UMLClassDiagram(){ //todo: should have a name?
 		this.classes = new HashSet<UMLClass>();
 		this.relations = new HashSet<UMLRelation>();
 	}
