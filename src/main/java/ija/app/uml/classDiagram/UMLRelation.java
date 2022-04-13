@@ -8,19 +8,21 @@ import java.util.stream.Collectors;
  * Class representing relations between classes in UML class diagram
  */
 
-public class UMLRelation {
+public class UMLRelation implements ija.app.uml.consistency {
 
 	private String name;
 	private String type;
 	private String to;
 	private List<String> from;
+	private Set<UMLClass> classes;
 
 	/**
 	 * Constructor of UMLRelation
 	 * @param type Type of created relation
 	 */
-	public UMLRelation(String type){
+	public UMLRelation(String type, Set <UMLClass> classes){
 		this.type = type;
+		this.classes = classes;
 		from = new LinkedList<>();
 		to = null;
 		name = "";
@@ -117,5 +119,22 @@ public class UMLRelation {
 	 */
 	public boolean delFrom(String from){
 		return this.from.remove(from);
+	}
+
+
+	/**
+	 * Method for checking consistency of UMLDiagrams
+	 * @return True if UMLDiagram is consistent
+	 */
+	@Override
+	public boolean consistencyCheck() {
+		/*Check if to class exists*/
+		if( ! classes.contains(new UMLClass(to)))
+			return false;
+		/*Check if all from classes exists*/
+		for(String className : from)
+			if( ! classes.contains(new UMLClass(className)))
+					return false;
+		return true;
 	}
 }

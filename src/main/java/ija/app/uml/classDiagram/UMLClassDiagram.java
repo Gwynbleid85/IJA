@@ -26,6 +26,7 @@ public class UMLClassDiagram {
 	}
 
 	public boolean delClass(String className){
+		clearRelations(className);
 		return this.classes.remove(new UMLClass(className));
 	}
 	/**
@@ -53,16 +54,26 @@ public class UMLClassDiagram {
 	}
 
 	/**
+	 * Method to clear relations after deleting UMLClass from UMLClassDiagram
+	 * @param className Name of deleted class
+	 */
+	private void clearRelations(String className){
+		relations.removeIf(r -> Objects.equals(r.getTo(), className) || (r.getFrom().contains(className) && r.getFrom().size() == 1));
+		for(UMLRelation r : relations){
+			r.delFrom(className);
+		}
+	}
+
+	/**
 	 * Method to get all own UMLClassMethods from UMLClass with given name
 	 * @param className Name of class we want methods from
 	 * @return null if UMLClass not found, List of UMLMethods otherwise
 	 */
 	public List<UMLClassMethod> getUMLClassOwnMethods(String className){
 		if(! classes.contains(new UMLClass(className)))
-			return null;
-		return Collections.unmodifiableList(findClassByName(className).getMethods());
+			return new ArrayList<>();
+		return findClassByName(className).getMethods();
 	}
-
 
 	/**
 	 * Method to get all inherited UMLClassMethods from UMLClass with given name
@@ -72,7 +83,10 @@ public class UMLClassDiagram {
 	public List<UMLClassMethod> getUMLClassInheritedMethods(String className){
 		if(! classes.contains(new UMLClass(className)))
 			return null;
-		return Collections.unmodifiableList(getUMLClassInheritedMethodsHelper(findClassByName(className)));
+		UMLClass c = findClassByName(className);
+		List<UMLClassMethod> list = new ArrayList<>(getUMLClassInheritedMethodsHelper(c));
+		list.removeAll(c.getMethods());
+		return list;
 	}
 
 	/**
@@ -82,11 +96,11 @@ public class UMLClassDiagram {
 	 * @return List of all UMLMethods (onw and inherited)
 	 */
 	private List<UMLClassMethod> getUMLClassInheritedMethodsHelper(UMLClass c){
-		List<UMLClassMethod> list = c.getMethods();
+		List<UMLClassMethod> list = new ArrayList<>(c.getMethods());
 		/* Got through all relations and find all classes that class c is inheriting from*/
 		for(UMLRelation r : relations){
 			if(r.getFrom().contains(c.getName()) && Objects.equals(r.getType(), "in"))
-				/* Recursively  call this method */
+				/* Recursively call this method */
 				list.addAll(new LinkedList<>(getUMLClassInheritedMethodsHelper(findClassByName(r.getTo()))));
 		}
 		return list;

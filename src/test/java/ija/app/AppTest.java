@@ -1,5 +1,6 @@
 package ija.app;
 
+import com.sun.source.tree.AssertTree;
 import ija.app.uml.classDiagram.*;
 import ija.app.uml.sequenceDiagram.*;
 import org.junit.Assert;
@@ -88,7 +89,7 @@ public class AppTest {
 	 */
 	@Test
 	public void testUMLRelation(){
-		UMLRelation u = new UMLRelation("asdf");
+		UMLRelation u = new UMLRelation("asdf", null);
 		Assert.assertEquals("Test empty from list", u.getFrom(), new LinkedList<String>());
 		Assert.assertNull("Test empty to attribute", u.getTo());
 
@@ -116,7 +117,7 @@ public class AppTest {
 		Assert.assertFalse("Test insert existing UMLClass", d.addClass(new UMLClass("a")));
 		Assert.assertTrue("Test remove existing UMLClass", d.delClass("a"));
 		Assert.assertFalse("Test remove non existing UMLClass", d.delClass("a"));
-		Assert.assertTrue("Test insert new UMLRelation", d.addRelation(new UMLRelation("b")));
+		Assert.assertTrue("Test insert new UMLRelation", d.addRelation(new UMLRelation("b", null)));
 
 		UMLClass a = new UMLClass("a");
 		a.addAttribute(new UMLClassAttribute("a"));
@@ -126,7 +127,7 @@ public class AppTest {
 		b.addAttribute(new UMLClassAttribute("b"));
 		b.addMethod(new UMLClassMethod("bb"));
 
-		UMLRelation r = new UMLRelation("in");
+		UMLRelation r = new UMLRelation("in", d.getClasses());
 		r.setTo(b.getName());
 		r.addToFrom(a.getName());
 
@@ -134,9 +135,25 @@ public class AppTest {
 		d.addClass(b);
 
 		d.addRelation(r);
-		//List<UMLClassMethod> ms = d.getUMLClassInheritedMethods("a");
-		//System.out.println(ms);
-		//Assert.assertTrue("Test get inherited methods", d.getUMLClassInheritedMethods("a").contains(new UMLClassMethod("bb")));
+		List<UMLClassMethod> ms = d.getUMLClassInheritedMethods("a");
+		System.out.println(ms);
+		Assert.assertTrue("Test get own methods 1", d.getUMLClassOwnMethods("a").contains(new UMLClassMethod("aa")));
+		Assert.assertFalse("Test get own methods 2", d.getUMLClassOwnMethods("a").contains(new UMLClassMethod("bb")));
+		Assert.assertTrue("Test get inherited methods 1", d.getUMLClassInheritedMethods("a").contains(new UMLClassMethod("bb")));
+		Assert.assertFalse("Test get inherited methods 2", d.getUMLClassInheritedMethods("a").contains(new UMLClassMethod("aa")));
+
+		/*Test consistencyCheck*/
+		Assert.assertTrue("Test consistency 1", r.consistencyCheck());
+		r.setTo("asdf");
+		Assert.assertFalse("Test consistency 2", r.consistencyCheck());
+		r.setTo(b.getName());
+		r.addToFrom("asdf");
+		Assert.assertFalse("Test consistency 3", r.consistencyCheck());
+
+		d.delClass(a.getName());
+		Assert.assertTrue("Test deleting class with relation 1", d.getRelations().contains(r));
+		d.delClass(b.getName());
+		Assert.assertFalse("Test deleting class with relation 2", d.getRelations().contains(r));
 
 	}
 
