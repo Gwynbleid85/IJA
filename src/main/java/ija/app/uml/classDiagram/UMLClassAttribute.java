@@ -1,5 +1,12 @@
 package ija.app.uml.classDiagram;
 
+
+/**
+ * @author Milos Hegr (xhegrm00)
+ * @date 9.4.2022
+ * Class representing attribute of UML class
+ */
+
 public class UMLClassAttribute {
 	private String name;
 	private String datatype;

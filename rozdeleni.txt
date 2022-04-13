@@ -1,2 +1,2 @@
-xhegrm00: 200
-xmlade01: 0
+xhegrm00: 100
+xmlade01: 100

@@ -1,16 +1,19 @@
 package ija.app.uml.classDiagram;
 import java.util.*;
 
-
-
+/**
+ * @author Milos Hegr (xhegrm00)
+ * @date 12.4.2022
+ * Class representing class diagram
+ */
 public class UMLClassDiagram {
 
 	private Set<UMLClass> classes;
 	private Set<UMLRelation> relations;
 
 	public UMLClassDiagram(){
-		this.classes = new HashSet<UMLClass>();
-		this.relations = new HashSet<UMLRelation>();
+		this.classes = new HashSet<>();
+		this.relations = new HashSet<>();
 	}
 
 	public UMLClassDiagram(Set<UMLClass> classes, Set<UMLRelation> relations){
@@ -84,7 +87,7 @@ public class UMLClassDiagram {
 		for(UMLRelation r : relations){
 			if(r.getFrom().contains(c.getName()) && Objects.equals(r.getType(), "in"))
 				/* Recursively  call this method */
-				list.addAll(getUMLClassInheritedMethodsHelper(findClassByName(r.getTo())));
+				list.addAll(new LinkedList<>(getUMLClassInheritedMethodsHelper(findClassByName(r.getTo()))));
 		}
 		return list;
 	}

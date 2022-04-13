@@ -1,26 +1,16 @@
-/*
- * todo:rewrite
- * IJA 2021/22: Úloha č. 1
- * Testovací třída pro JUnit.
- * (C) rk
- */
+
 package ija.app;
 
 import ija.app.uml.classDiagram.*;
-import ija.app.uml.sequenceDiagram.*;
+import ija.app.uml.sequenceDiagram.UMLClassInstance;
+import ija.app.uml.sequenceDiagram.UMLMessage;
+import ija.app.uml.sequenceDiagram.UMLSequenceDiagram;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 
-/**
- * todo: rewrite
- * Testovací třída pro první úkol z předmětu IJA (2021/22).
- * Testovací případy nemusí pokrývat celou funkcionalitu požadovanou API a kontrakty metod v zadání.
- * @author koci
- */
 public class AppTest {
 	/**
 	 * Test UMLClassAttribute

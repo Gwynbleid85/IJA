@@ -1,5 +1,12 @@
 package ija.app.uml.classDiagram;
 import java.util.*;
+
+/**
+ * @author Milos Hegr (xhegrm00)
+ * @date 11.4.2022
+ * Class representing class in UML
+ */
+
 public class UMLClass {
 	private String name;
 	private  List<UMLClassAttribute> attributes;
@@ -13,8 +20,8 @@ public class UMLClass {
 	 */
 	public UMLClass(String name, boolean isInterface){
 		this.name = name;
-		attributes = new LinkedList<UMLClassAttribute>();
-		methods = new LinkedList<UMLClassMethod>();
+		attributes = new LinkedList<>();
+		methods = new LinkedList<>();
 	}
 
 	/**
@@ -24,8 +31,8 @@ public class UMLClass {
 	 */
 	public UMLClass(String name){
 		this.name = name;
-		attributes = new LinkedList<UMLClassAttribute>();
-		methods = new LinkedList<UMLClassMethod>();
+		attributes = new LinkedList<>();
+		methods = new LinkedList<>();
 		isInterface = false;
 	}
 

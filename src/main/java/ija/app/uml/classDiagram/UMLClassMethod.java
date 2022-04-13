@@ -1,5 +1,12 @@
 package ija.app.uml.classDiagram;
 
+
+/**
+ * @author Milos Hegr (xhegrm00)
+ * @date 9.4.2022
+ * Class representing method in UML class
+ */
+
 public class UMLClassMethod {
 	private String name;
 	private String accessMod;

@@ -1,7 +1,12 @@
 package ija.app.uml.classDiagram;
-
 import java.util.*;
 import java.util.stream.Collectors;
+
+/**
+ * @author Milos Hegr (xhegrm00)
+ * @date 10.4.2022
+ * Class representing relations between classes in UML class diagram
+ */
 
 public class UMLRelation {
 
@@ -16,7 +21,7 @@ public class UMLRelation {
 	 */
 	public UMLRelation(String type){
 		this.type = type;
-		from = new LinkedList<String>();
+		from = new LinkedList<>();
 		to = null;
 		name = "";
 	}
@@ -83,7 +88,7 @@ public class UMLRelation {
 	 * @return False if given element already in this.from list, True otherwise
 	 */
 	public boolean addToFrom(String from){
-		if(! this.from.contains(from))
+		if(this.from.contains(from))
 			return false;
 		return this.from.add(from);
 	}
