@@ -1,15 +1,13 @@
 package ija.app.uml.sequenceDiagram;
 import ija.app.uml.classDiagram.UMLClassDiagram;
-
+import ija.app.uml.consistency;
 
 /**
  * @author Jiri Mladek (xmlade01)
  * @date 12.4.2022
- * File for ClassInstance for Sequence diagram usage
+ * Class representing UMLClassInstance in Sequence diagram
  */
-
-
-public class UMLClassInstance {
+public class UMLClassInstance implements consistency{
     private String name;
     private String className;
     //final id will be concatenated from name, ':' and classname
@@ -24,6 +22,7 @@ public class UMLClassInstance {
     public UMLClassInstance(UMLClassDiagram classDiagram, String name, String className) {
         this.name = name;
         this.className = className;
+        this.classDiagram = classDiagram;
     }
 
     /**
@@ -74,11 +73,18 @@ public class UMLClassInstance {
         return classDiagram;
     }
 
-    //TODO:consistency
+    /**
+     * Method which checks, whether there is an existing class from ClassDiagram for ClassName
+     * @return true if is consistent, false if not
+     * @note implements consistency interface
+     */
+    public boolean consistencyCheck(){
+        return classDiagram.getClasses().contains(className);
+    }
+
 
     @Override
     public boolean equals(Object o) {
-
         if(o instanceof UMLClassInstance){
             UMLClassInstance toCompare = (UMLClassInstance) o;
             String id = name + ":" + className;

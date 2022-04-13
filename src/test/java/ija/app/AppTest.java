@@ -1,9 +1,3 @@
-/*
- * todo:rewrite
- * IJA 2021/22: Úloha č. 1
- * Testovací třída pro JUnit.
- * (C) rk
- */
 package ija.app;
 
 import ija.app.uml.classDiagram.*;
@@ -16,10 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * todo: rewrite
- * Testovací třída pro první úkol z předmětu IJA (2021/22).
- * Testovací případy nemusí pokrývat celou funkcionalitu požadovanou API a kontrakty metod v zadání.
- * @author koci
+ * Test class for IJA project - homework3.
+ * @author Milos Hegr (xhegrm00), Jiri Mladek (xmlade01)
  */
 public class AppTest {
 	/**
@@ -149,9 +141,13 @@ public class AppTest {
 	}
 
 
+	/**
+	 * Test UMLClassInstance
+	 */
 	@Test
 	public void testUMLClassInstance(){
 		UMLClassDiagram cd = new UMLClassDiagram();
+		/*Test successful creation of classInstance*/
 		UMLClassInstance classInstance = new UMLClassInstance(cd, "c1", "Car");
 		Assert.assertEquals("Test creating id", classInstance.createId(), "c1:Car");
 		Assert.assertEquals("Test name", classInstance.getName(), "c1");
@@ -167,27 +163,37 @@ public class AppTest {
 
 	}
 
+	/**
+	 * Test UMLMessage
+	 */
 	@Test
 	public void testUMLMessage(){
 		UMLClassDiagram cd = new UMLClassDiagram();
-		UMLMessage msg = new UMLMessage(cd, "class1", "class2", "Count max");
-
+		/*Test successful creation of UMLMessage*/
+		UMLMessage msg = new UMLMessage(cd, new UMLSequenceDiagram("sd1", cd), "c1:Car", "b1:Bus", "Count max");
 		Assert.assertEquals("Test UMLMessage value", msg.getMessage(), "Count max");
-		Assert.assertEquals("Test UMLMessage 'from' class", msg.getFrom(), "class1");
-		Assert.assertEquals("Test UMLMessage 'to' class", msg.getTo(), "class2");
+		Assert.assertEquals("Test UMLMessage 'from' instance", msg.getFrom(), "c1:Car");
+		Assert.assertEquals("Test UMLMessage 'to' instance", msg.getTo(), "b1:Bus");
 		/*Test changing value of message*/
 		msg.setMessage("Count min");
 		Assert.assertEquals("Test UMLMessage new value", msg.getMessage(), "Count min");
-		msg.setFrom("Car");
-		Assert.assertEquals("Test UMLMessage new 'from' class", msg.getFrom(), "Car");
-		msg.setTo("Bus");
-		Assert.assertEquals("Test UMLMessage new 'to' class", msg.getTo(), "Bus");
+		/*Test changing value of 'from' instance*/
+		msg.setFrom("c2:Car");
+		Assert.assertEquals("Test UMLMessage new 'from' instance", msg.getFrom(), "c2:Car");
+		/*Test changing value of 'to' instance*/
+		msg.setTo("b2:Bus");
+		Assert.assertEquals("Test UMLMessage new 'to' instance", msg.getTo(), "b2:Bus");
+
 
 	}
 
+	/**
+	 * Test SequenceDiagram
+	 */
 	@Test
-	public void testSequenceDiagram() {
+	public void testUMLSequenceDiagram() {
 		UMLClassDiagram cd = new UMLClassDiagram();
+		/*Test successful creation of UMLSequenceDiagram*/
 		UMLSequenceDiagram sd = new UMLSequenceDiagram("sd1", cd);
 		Assert.assertEquals("Test sequence diagram name", sd.getName(), "sd1");
 		/*Test changing value of sequence diagram*/
@@ -196,9 +202,11 @@ public class AppTest {
 		/*Test UMLClassInstance*/
 		Assert.assertTrue("Test add new instance", sd.addInstance(new UMLClassInstance(cd, "c1", "Car")));
 		Assert.assertFalse("Test add existing instance", sd.addInstance(new UMLClassInstance(cd, "c1", "Car")));
+		Assert.assertFalse("Test removing non-existing instance", sd.removeInstance(new UMLClassInstance(cd, "x1", "Hello")));
 		/*Test UMLMessage*/
-
+		UMLMessage message = new UMLMessage(cd, sd,"c1:Car", "b1:Bus", "Count max");
+		sd.addMessage(message);
+		Assert.assertTrue("Test removing existing message", sd.removeMessage(message));
 	}
-
 }
 

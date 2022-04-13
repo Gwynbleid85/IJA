@@ -6,9 +6,8 @@ import java.util.*;
 /**
  * @author Jiri Mladek (xmlade01)
  * @date 12.4.2022
- * File for Sequence diagram
+ * Class representing SequenceDiagram
  */
-
 public class UMLSequenceDiagram {
 
     private String name;
@@ -60,12 +59,10 @@ public class UMLSequenceDiagram {
         return Collections.unmodifiableList(messages);
     }
 
-    //pridani classinstance, kontrola zda uz neexistuje
-
     /**
      * Method which adds instance to a List
      * @param newInstance Instance to be added to List
-     * @return false if already exists, true if instance doesn't exist yet
+     * @return false if already exists, true if instance is added
      */
     public boolean addInstance(UMLClassInstance newInstance){
         if(instances.contains(newInstance))
@@ -89,15 +86,9 @@ public class UMLSequenceDiagram {
     /**
      * Method which adds message to a List
      * @param newMessage Message to be added to List
-     * @return false if already exists, true if instance doesn't exist yet
      */
-    public boolean addMessage(UMLMessage newMessage){
-        if(messages.contains(newMessage))
-            return false;
-        else {
-            messages.add(newMessage);
-            return true;
-        }
+    public void addMessage(UMLMessage newMessage){
+        messages.add(newMessage);
     }
 
     /**
@@ -110,10 +101,4 @@ public class UMLSequenceDiagram {
     }
 
     //TODO: change position
-
-    /*
-    public void asdf(){
-        classDiagram.getUMLClassOwnMethods("asdf");
-    }
-    */
 }
