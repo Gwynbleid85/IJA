@@ -3,6 +3,12 @@ package ija.app.uml.sequenceDiagram;
 import ija.app.uml.classDiagram.UMLClassDiagram;
 import java.util.*;
 
+/**
+ * @author Jiri Mladek (xmlade01)
+ * @date 12.4.2022
+ * File for Sequence diagram
+ */
+
 public class UMLSequenceDiagram {
 
     private String name;
@@ -80,6 +86,11 @@ public class UMLSequenceDiagram {
     }
 
 
+    /**
+     * Method which adds message to a List
+     * @param newMessage Message to be added to List
+     * @return false if already exists, true if instance doesn't exist yet
+     */
     public boolean addMessage(UMLMessage newMessage){
         if(messages.contains(newMessage))
             return false;
@@ -89,6 +100,11 @@ public class UMLSequenceDiagram {
         }
     }
 
+    /**
+     * Method which removes message from List
+     * @param newMessage message to be removed from List
+     * @return true if message to be removed exists
+     */
     public boolean removeMessage(UMLMessage newMessage){
         return messages.remove(newMessage);
     }
