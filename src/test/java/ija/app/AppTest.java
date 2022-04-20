@@ -1,6 +1,6 @@
+
 package ija.app;
 
-import com.sun.source.tree.AssertTree;
 import ija.app.uml.classDiagram.*;
 import ija.app.uml.sequenceDiagram.*;
 import org.junit.Assert;
@@ -135,8 +135,6 @@ public class AppTest {
 		d.addClass(b);
 
 		d.addRelation(r);
-		List<UMLClassMethod> ms = d.getUMLClassInheritedMethods("a");
-		System.out.println(ms);
 		Assert.assertTrue("Test get own methods 1", d.getUMLClassOwnMethods("a").contains(new UMLClassMethod("aa")));
 		Assert.assertFalse("Test get own methods 2", d.getUMLClassOwnMethods("a").contains(new UMLClassMethod("bb")));
 		Assert.assertTrue("Test get inherited methods 1", d.getUMLClassInheritedMethods("a").contains(new UMLClassMethod("bb")));
