@@ -14,6 +14,8 @@ public class UMLRelation implements ija.app.uml.consistency {
 	private String type;
 	private String to;
 	private List<String> from;
+	private String cardinalityFrom; //todo
+	private String cardinalityTo; //todo
 	private Set<UMLClass> classes;
 
 	/**

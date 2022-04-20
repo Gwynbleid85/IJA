@@ -1,0 +1,130 @@
+{
+  "classDiagram": {
+    "classes": [
+      {
+        "name": "Car",
+        "isInterface": true,
+        "attributes": [
+          {
+            "name": "max_speed",
+            "datatype": "integer",
+            "accessMod": "private"
+          },
+          {
+            "name": "acceleration",
+            "datatype": "integer",
+            "accessMod": "public"
+          }
+        ],
+        "methods": [
+          {
+            "name": "count",
+            "accessMod": "public"
+          },
+          {
+            "name": "ride",
+            "accessMod": "private"
+          }
+        ]
+      },
+      {
+        "name": "Bus",
+        "isInterface": false,
+        "attributes": [
+          {
+            "name": "num_of_seats",
+            "datatype": "integer",
+            "accessMod": "private"
+          },
+          {
+            "name": "year",
+            "datatype": "integer",
+            "accessMod": "public"
+          }
+        ],
+        "methods": [
+          {
+            "name": "slow_down",
+            "accessMod": "public"
+          },
+          {
+            "name": "crash",
+            "accessMod": "private"
+          }
+        ]
+      }
+    ],
+    "relations": [
+      {
+        "name": "Is_superior",
+        "type": "agregation",
+        "to": "Bus",
+        "from": ["Car"],
+        "cardinalityFrom": "oneToMany",
+        "cardinalityTo": "manyToMany"
+      },
+      {
+        "name": "Fuck",
+        "type": "inheritance",
+        "to": "Car",
+        "from": ["Bus", "Non-existingClass"],
+        "cardinalityFrom": "oneToMany",
+        "cardinalityTo": "manyToMany"
+      }
+    ]
+  },
+  "sequenceDiagrams": [
+    {
+      "name": "SequenceD1",
+      "instances": [
+        {
+          "name": "c1",
+          "className": "Car"
+        },
+        {
+          "name": "c2",
+          "className": "Car"
+        }
+      ],
+      "messages": [
+        {
+          "from": "c1",
+          "to": "c2",
+          "message": "count"
+        },
+        {
+          "from": "c2",
+          "to": "c1",
+          "message": "ride"
+        }
+      ]
+    },
+    {
+      "name": "SequenceD2",
+      "instances": [
+        {
+          "name": "x1",
+          "className": "Bus"
+        },
+        {
+          "name": "x2",
+          "className": "Bus"
+        }
+      ],
+      "messages": [
+        {
+          "from": "x1",
+          "to": "x2",
+          "message": "slow_down"
+        },
+        {
+          "from": "x2",
+          "to": "x1",
+          "message": "ride"
+        }
+      ]
+    }
+  ]
+}
+
+
