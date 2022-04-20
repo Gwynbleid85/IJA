@@ -1,5 +1,6 @@
 package ija.app.uml.sequenceDiagram;
 
+import ija.app.uml.classDiagram.UMLClass;
 import ija.app.uml.classDiagram.UMLClassDiagram;
 import java.util.*;
 
@@ -101,4 +102,24 @@ public class UMLSequenceDiagram {
     }
 
     //TODO: change position
+
+
+
+
+
+
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof UMLSequenceDiagram){
+            UMLSequenceDiagram toCompare = (UMLSequenceDiagram) o;
+            return this.name.equals(toCompare.name);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.name.hashCode();
+    }
+
 }
