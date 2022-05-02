@@ -8,6 +8,7 @@ import javafx.scene.Node;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class G_UMLClassDiagram {
@@ -24,7 +25,7 @@ public class G_UMLClassDiagram {
 		/* Create gui classes*/
 		classes = new HashSet<>();
 		for(UMLClass c : d.getClasses()){
-			G_UMLClass gc = new G_UMLClass(c);
+			G_UMLClass gc = new G_UMLClass(c, this);
 			classes.add(gc);
 			root.getChildren().add(gc.getNode());
 		}
@@ -32,11 +33,27 @@ public class G_UMLClassDiagram {
 		/* Create gui relations*/
 		relations = new HashSet<>();
 		for(UMLRelation r : d.getRelations()){
-			G_UMLRelation gr = new G_UMLRelation(r);
+			G_UMLRelation gr = new G_UMLRelation(r, this);
 			relations.add(gr);
 			root.getChildren().add(gr.getNode());
 		}
 
+	}
+
+
+	public G_UMLClass getGUMLClass(String name){
+		for(G_UMLClass gc : classes){
+			if(Objects.equals(gc.getName(), name)){
+				return gc;
+			}
+		}
+		return null;
+	}
+
+	public void updateRelations(){
+		for(G_UMLRelation r : relations){
+			r.updatePos();
+		}
 	}
 
 	public Node getNode(){return root;}

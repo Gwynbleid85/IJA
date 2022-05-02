@@ -1,4 +1,6 @@
 package ija.app.uml.classDiagram;
+import javafx.stage.Stage;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,14 @@ public class UMLRelation implements ija.app.uml.consistency {
 	public UMLRelation(String type, Set <UMLClass> classes){
 		this.type = type;
 		this.classes = classes;
+		from = new LinkedList<>();
+		to = null;
+		name = "";
+	}
+
+	public UMLRelation(String type){
+		this.type = type;
+		this.classes = null;
 		from = new LinkedList<>();
 		to = null;
 		name = "";

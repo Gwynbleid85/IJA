@@ -80,7 +80,7 @@ public class UML {
      * @param filename name of file, from which diagrams will be loaded
      * @return UML object with all diagrams
      */
-    public UML loadDiagramsFromFile(String filename){
+    static public UML loadDiagramsFromFile(String filename){
         //create gson
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
@@ -99,17 +99,16 @@ public class UML {
 
     /**
      * Method which stores UML objects (diagrams with content) into file
-     * @param uml UML object which contains diagrams
      * @param filename file into which diagrams will be saved (json)
      */
-    public void storeDiagramsToFile(UML uml, String filename){
+    public void storeDiagramsToFile(String filename){
         //create gson
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
         Gson gson = builder.create();
         try{
             FileWriter writer = new FileWriter(filename);
-            writer.write(gson.toJson(uml)); //writes diagrams into json
+            writer.write(gson.toJson(this)); //writes diagrams into json
             writer.close();
         }
         catch(IOException e) {
@@ -119,9 +118,8 @@ public class UML {
 
     public static void main(String[] args) {
         //load and save data into objects, then write data from objects back into file
-        UML uml = new UML();
-        UML umlDiagrams = uml.loadDiagramsFromFile("src/main/java/ija/app/uml/data_input.json");
-        uml.storeDiagramsToFile(umlDiagrams, "src/main/java/ija/app/uml/data_output.json");
+        UML umlDiagrams = UML.loadDiagramsFromFile("src/main/java/ija/app/uml/data_input.json");
+        umlDiagrams.storeDiagramsToFile( "src/main/java/ija/app/uml/data_output.json");
     }
 
 }
