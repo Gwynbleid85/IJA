@@ -6,6 +6,8 @@ import ija.app.uml.sequenceDiagram.*;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,8 +21,13 @@ public class AppTest {
 	 * Test UMLClassAttribute
 	 */
 	@Test
-	public void testUMLClassAttribute(){
+	public void testUMLClassAttribute() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+
+
 		UMLClassAttribute a = new UMLClassAttribute("name", "type", "accessor");
+		Method x = UMLClassAttribute.class.getMethod("setName", String.class);
+		System.out.println(x.invoke(a, "a"));
+
 		/*Test changing value of attributes*/
 		Assert.assertEquals("Test name", a.getName(), "name");
 		Assert.assertEquals("Test datatype", a.getDatatype(), "type");

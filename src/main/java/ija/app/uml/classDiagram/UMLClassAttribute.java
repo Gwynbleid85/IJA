@@ -47,6 +47,11 @@ public class UMLClassAttribute {
 	}
 
 	@Override
+	public String toString() {
+		return accessMod + " " + datatype + " " + name;
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if(! (o instanceof UMLClassAttribute)) return false;
 

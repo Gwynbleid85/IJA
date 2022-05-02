@@ -34,7 +34,7 @@ public class UMLClassDiagram {
 	 * @return Unmodifiable Set all UMLClass objects in UMLClassDiagram
 	 */
 	public Set<UMLClass> getClasses(){
-		return Collections.unmodifiableSet(classes);
+		return classes;
 	}
 
 	public boolean addRelation(UMLRelation newRelation){
@@ -50,7 +50,7 @@ public class UMLClassDiagram {
 	 * @return Unmodifiable Set all UMLRelation objects in UMLClassDiagram
 	 */
 	public Set<UMLRelation> getRelations(){
-		return Collections.unmodifiableSet(relations);
+		return relations;
 	}
 
 	/**

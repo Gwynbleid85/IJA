@@ -63,6 +63,10 @@ public class UMLClassMethod {
 		this.accessMod = accessMod;
 	}
 
+	@Override
+	public String toString() {
+		return accessMod + " " + name;
+	}
 
 	@Override
 	public boolean equals(Object o) {
