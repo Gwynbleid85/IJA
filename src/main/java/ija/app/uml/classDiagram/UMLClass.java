@@ -80,12 +80,10 @@ public class UMLClass {
 	}
 
 	/**
-	 * Method deletes attribute of given name from list of attributes of class
-	 * @param name name of attribute to be deleted
-	 * @return False if attribute with given name doesn't exist, True if successfully removed
+	 * Method deletes all attributes from list of attributes of class
 	 */
-	public boolean delAttribute(String name){
-		return attributes.remove(new UMLClassAttribute(name));
+	public void delAttributes(){
+		attributes = new LinkedList<>();
 	}
 
 	/**
@@ -93,7 +91,7 @@ public class UMLClass {
 	 * @return Unmodifiable list of UMLClassAttributes
 	 */
 	public List<UMLClassAttribute> getAttributes(){
-		return Collections.unmodifiableList(attributes);
+		return attributes;
 	}
 
 	/**
@@ -108,12 +106,10 @@ public class UMLClass {
 	}
 
 	/**
-	 * Method deletes UMLMethod of given name from list of UMLMethod of class
-	 * @param name Name of UMLMethod to be deleted
-	 * @return  False if attribute with given name doesn't exist, True if successfully removed
+	 * Method deletes all UMLMethods from list of UMLMethod of class
 	 */
-	public boolean delMethod(String name){
-		return methods.remove(new UMLClassMethod(name));
+	public void delMethods(){
+		methods = new LinkedList<>();
 	}
 
 	/**
@@ -121,7 +117,7 @@ public class UMLClass {
 	 * @return Unmodifiable list of UMLClassMethod
 	 */
 	public List<UMLClassMethod> getMethods(){
-		return Collections.unmodifiableList(methods);
+		return methods;
 	}
 
 

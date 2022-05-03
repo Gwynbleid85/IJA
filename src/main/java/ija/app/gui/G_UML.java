@@ -19,43 +19,43 @@ public class G_UML {
 	private Stage stage;
 	private UML uml;
 	private G_UMLClassDiagram classDiagram;
-	//private List<G_>
-	private Scene classDiagramScene;
-	private List<Scene> sequenceDiagramScenes;
 
+	/**
+	 * Constructor of graphical representation of whole UML
+	 * @param uml UML to be represented
+	 * @param stage Stage on application
+	 * @throws IOException
+	 */
 	public G_UML(UML uml, Stage stage) throws IOException {
 		this.uml = uml;
 		this.stage = stage;
 
-		classDiagram = new G_UMLClassDiagram(uml.getClassDiagram());
-		createClassDiagramScene();
+		classDiagram = new G_UMLClassDiagram(uml.getClassDiagram(), this);
 	}
 
-	private void createClassDiagramScene() throws IOException {
 
-		Pane root = FXMLLoader.load(getClass().getResource("fxml/G_ClassDiagramSceene.fxml"));
-		classDiagramScene = new Scene((Parent) root);
-		root.getChildren().add(classDiagram.getNode());
-
-		setEventHandlers(root);
-	}
-
-	private void setEventHandlers(Node n) {
-		n.lookup("#newRelation").setOnMouseClicked(e->{
-			System.out.println("New relation");
-		});
-
-		n.lookup("#newClass").setOnMouseClicked(e->{
-			System.out.println("New class");
-		});
-
-		n.lookup("#Edit").setOnMouseClicked(e->{
-			System.out.println("Edit");
-		});
-	}
-
+	/**
+	 * Get main scene of application (classDiagramScene)
+	 * @return main scene of application (classDiagramScene)
+	 */
 	public Scene getMainScene(){
-		return classDiagramScene;
+		return classDiagram.getScene();
 	}
 
+	/**
+	 * Set selected scene
+	 * @param type Type of scene (UMLClassDiagram / UMLSequenceDiagram)
+	 * @param name If type == UMLSequenceDiagram -> name of UMLSequenceDiagram
+	 */
+	public void setScene(int type, String name){
+		//TODO: set right size (???stage.getScene().getSize()???)
+		if(type == 0)
+			stage.setScene(classDiagram.getScene());
+
+		stage.show();
+	}
+
+	public Stage getStage(){
+		return stage;
+	}
 }

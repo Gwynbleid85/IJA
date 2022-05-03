@@ -5,30 +5,29 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-border-color: black; -fx-border-width: 2px;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-border-color: black; -fx-border-width: 2px; -fx-background-color: white;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="umlClassName" text="Label">
          <font>
             <Font size="14.0" />
          </font>
          <VBox.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            <Insets bottom="4.0" left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
       </Label>
       <VBox fx:id="umlClassAttribs" style="-fx-border-color: black; -fx-border-width: 2 0 0 0; -fx-padding: 5;">
          <children>
-            <Label fx:id="umlClassName1" text="Label">
+            <Label text="Label">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label fx:id="umlClassName11" text="Label">
+            <Label text="Label">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label fx:id="umlClassName12" text="Label">
+            <Label text="Label">
                <font>
                   <Font size="14.0" />
                </font>
@@ -37,17 +36,17 @@
       </VBox>
       <VBox fx:id="umlClassMethods" layoutX="12.0" layoutY="50.0" style="-fx-border-color: black; -fx-border-width: 2 0 0 0; -fx-padding: 5;">
          <children>
-            <Label fx:id="umlClassName11" text="Label">
+            <Label text="Label">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label fx:id="umlClassName111" text="Label">
+            <Label text="Label">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label fx:id="umlClassName121" text="Label">
+            <Label text="Label">
                <font>
                   <Font size="14.0" />
                </font>

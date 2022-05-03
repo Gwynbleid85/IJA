@@ -1,5 +1,4 @@
 package ija.app.uml.classDiagram;
-import javafx.stage.Stage;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -10,7 +9,7 @@ import java.util.stream.Collectors;
  * Class representing relations between classes in UML class diagram
  */
 
-public class UMLRelation implements ija.app.uml.consistency {
+public class UMLRelation{
 
 	private String name;
 	private String type;
@@ -18,27 +17,25 @@ public class UMLRelation implements ija.app.uml.consistency {
 	private List<String> from;
 	private String cardinalityFrom; //todo
 	private String cardinalityTo; //todo
-	private Set<UMLClass> classes;
 
 	/**
 	 * Constructor of UMLRelation
 	 * @param type Type of created relation
 	 */
-	public UMLRelation(String type, Set <UMLClass> classes){
+	public UMLRelation(String type){
 		this.type = type;
-		this.classes = classes;
 		from = new LinkedList<>();
 		to = null;
 		name = "";
 	}
 
-	public UMLRelation(String type){
-		this.type = type;
-		this.classes = null;
-		from = new LinkedList<>();
-		to = null;
-		name = "";
-	}
+	//public UMLRelation(String type){
+	//	this.type = type;
+	//	this.classes = null;
+	//	from = new LinkedList<>();
+	//	to = null;
+	//	name = "";
+	//}
 
 	/**
 	 * Getter of type attribute
@@ -138,8 +135,7 @@ public class UMLRelation implements ija.app.uml.consistency {
 	 * Method for checking consistency of UMLDiagrams
 	 * @return True if UMLDiagram is consistent
 	 */
-	@Override
-	public boolean consistencyCheck() {
+	public boolean consistencyCheck(Set<UMLClass> classes) {
 		/*Check if to class exists*/
 		if( ! classes.contains(new UMLClass(to)))
 			return false;

@@ -8,22 +8,22 @@
           {
             "name": "max_speed",
             "datatype": "integer",
-            "accessMod": "private"
+            "accessMod": "-"
           },
           {
             "name": "acceleration",
             "datatype": "integer",
-            "accessMod": "public"
+            "accessMod": "+"
           }
         ],
         "methods": [
           {
             "name": "count",
-            "accessMod": "public"
+            "accessMod": "+"
           },
           {
             "name": "ride",
-            "accessMod": "private"
+            "accessMod": "-"
           }
         ]
       },
@@ -34,22 +34,22 @@
           {
             "name": "num_of_seats",
             "datatype": "integer",
-            "accessMod": "private"
+            "accessMod": "-"
           },
           {
             "name": "year",
             "datatype": "integer",
-            "accessMod": "public"
+            "accessMod": "+"
           }
         ],
         "methods": [
           {
             "name": "slow_down",
-            "accessMod": "public"
+            "accessMod": "+"
           },
           {
             "name": "crash",
-            "accessMod": "private"
+            "accessMod": "-"
           }
         ]
       }

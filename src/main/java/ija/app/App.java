@@ -30,33 +30,6 @@ public class App extends Application
     public void start(Stage stage) throws IOException {
         stage.setTitle("UML diagrams");
 
-	    //UMLClass cc = new UMLClass("asdf");
-	    //cc.addAttribute(new UMLClassAttribute("attrib1", "int", "+"));
-	    //cc.addAttribute(new UMLClassAttribute("attrib2", "int", "+"));
-	    //cc.addAttribute(new UMLClassAttribute("attrib3", "int", "+"));
-	    //cc.addMethod(new UMLClassMethod("method1", "-"));
-	    //cc.addMethod(new UMLClassMethod("method2", "-"));
-	    //cc.addMethod(new UMLClassMethod("method3", "-"));
-//
-	    //UMLClass cc2 = new UMLClass("asdf2");
-	    //cc2.addAttribute(new UMLClassAttribute("attrib1", "int", "+"));
-	    //cc2.addAttribute(new UMLClassAttribute("attrib2", "int", "+"));
-	    //cc2.addAttribute(new UMLClassAttribute("attrib3", "int", "+"));
-	    //cc2.addMethod(new UMLClassMethod("method1", "-"));
-	    //cc2.addMethod(new UMLClassMethod("method2", "-"));
-	    //cc2.addMethod(new UMLClassMethod("method3", "-"));
-	    //UMLClassDiagram d = new UMLClassDiagram();
-	    //d.addClass(cc);
-	    //d.addClass(cc2);
-//
-	    //UMLRelation r = new UMLRelation("a");
-		//r.setTo("asdf");
-		//r.addToFrom("asdf2");
-		//d.addRelation(r);
-//
-	    //G_UMLClassDiagram gd = new G_UMLClassDiagram(d);
-
-
 
 	    Pane root  = FXMLLoader.load(getClass().getResource("fxml/startScreen.fxml"));
 		root.lookup("#Load").setOnMouseClicked(e -> {
