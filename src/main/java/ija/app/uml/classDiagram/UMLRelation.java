@@ -14,9 +14,9 @@ public class UMLRelation{
 	private String name;
 	private String type;
 	private String to;
-	private List<String> from;
-	private String cardinalityFrom; //todo
-	private String cardinalityTo; //todo
+	private String from;
+	private String cardinalityTo;
+	private String cardinalityFrom;
 
 	/**
 	 * Constructor of UMLRelation
@@ -24,9 +24,11 @@ public class UMLRelation{
 	 */
 	public UMLRelation(String type){
 		this.type = type;
-		from = new LinkedList<>();
+		from = null;
 		to = null;
 		name = "";
+		cardinalityTo = "";
+		cardinalityFrom = "";
 	}
 
 	//public UMLRelation(String type){
@@ -47,6 +49,7 @@ public class UMLRelation{
 
 	/**
 	 * Setter of type attribute
+	 * Possible types (Association, Aggregation, Composition and Generalization)
 	 * @param type New value of type attribute
 	 */
 	public void setType(String type){
@@ -89,45 +92,31 @@ public class UMLRelation{
 	 * Getter of from attribute
 	 * @return Unmodifiable list from
 	 */
-	public List<String> getFrom(){
-		return Collections.unmodifiableList(from);
+	public String getFrom(){
+		return from;
 	}
 
 	/**
 	 * Method to add element to this.from list
-	 * @param from New element to be added to this.from list
-	 * @return False if given element already in this.from list, True otherwise
+	 * @param from New from value
 	 */
-	public boolean addToFrom(String from){
-		if(this.from.contains(from))
-			return false;
-		return this.from.add(from);
+	public void setFrom(String from){
+		this.from = from;
+	}
+	public String getCardinalityTo() {
+		return cardinalityTo;
 	}
 
-	/**
-	 * Appends list of String to this.from
-	 * @param from List to be appended
-	 * @return False if some element from given list exists in this.from, True otherwise
-	 */
-	public boolean addToFrom(List<String> from){
-		/* Make intersect of this.from and from*/
-		Set<String> result = from.stream()
-				.distinct()
-				.filter(this.from::contains)
-				.collect(Collectors.toSet());
-		/*If intersect not empty*/
-		if(!result.isEmpty())
-			return false;
-		return this.from.addAll(from);
+	public void setCardinalityTo(String cardinalityTo) {
+		this.cardinalityTo = cardinalityTo;
 	}
 
-	/**
-	 * Method to delete elements from from attribute
-	 * @param from Attribute to be deleted
-	 * @return False in given element doesn't exists, true otherwise
-	 */
-	public boolean delFrom(String from){
-		return this.from.remove(from);
+	public String getCardinalityFrom() {
+		return cardinalityFrom;
+	}
+
+	public void setCardinalityFrom(String cardinalityFrom) {
+		this.cardinalityFrom = cardinalityFrom;
 	}
 
 
@@ -140,9 +129,9 @@ public class UMLRelation{
 		if( ! classes.contains(new UMLClass(to)))
 			return false;
 		/*Check if all from classes exists*/
-		for(String className : from)
-			if( ! classes.contains(new UMLClass(className)))
-					return false;
+		if( ! classes.contains(new UMLClass(from)))
+			return false;
+
 		return true;
 	}
 }

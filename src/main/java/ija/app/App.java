@@ -44,7 +44,14 @@ public class App extends Application
 			} catch (IOException ex) {
 				throw new RuntimeException(ex);
 			}
+			stage.setResizable(true);
 			stage.setScene(gUml.getMainScene());
+
+			try {
+				gUml.draw();
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			}
 		});
 
 	    root.lookup("#New").setOnMouseClicked(e -> {
@@ -55,11 +62,13 @@ public class App extends Application
 		    } catch (IOException ex) {
 			    throw new RuntimeException(ex);
 		    }
+		    stage.setResizable(true);
 		    stage.setScene(gUml.getMainScene());
 	    });
 
 
 	    stage.setScene(new Scene(root, 500, 500));
+		stage.setResizable(false);
 		stage.show();
     }
 }

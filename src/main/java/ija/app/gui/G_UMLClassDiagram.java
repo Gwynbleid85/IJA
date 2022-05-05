@@ -1,6 +1,12 @@
 package ija.app.gui;
 
 import ija.app.gui.dialogs.G_EditUMLClassDialog;
+import ija.app.gui.dialogs.G_EditUMLRelationDialog;
+import ija.app.gui.dialogs.G_UMLRelationConsistencyCheck;
+import ija.app.history.History;
+import ija.app.history.historyEvents.HE_addAndDelete_T;
+import ija.app.history.historyEvents.HE_addNew;
+import ija.app.history.historyEvents.HE_delete;
 import ija.app.uml.classDiagram.UMLClass;
 import ija.app.uml.classDiagram.UMLClassDiagram;
 import ija.app.uml.classDiagram.UMLRelation;
@@ -8,27 +14,27 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
-public class G_UMLClassDiagram {
+public class G_UMLClassDiagram implements HE_addAndDelete_T {
 	/** UMLClassDiagram represented by this object */
 	private UMLClassDiagram diagram;
 	/** Parent of this graphical representation */
 	private G_UML parent;
 	/** Graphical representations of all UMLClasses */
-	private Set<G_UMLClass> classes;
+	private List<G_UMLClass> classes;
 	/** Graphical representations of all UMLRelations */
-	private Set<G_UMLRelation> relations;
+	private List<G_UMLRelation> relations;
 	/** Selected object (G_UMLCLass or G_UMLRelation) */
 	private G_selectable selected;
 	/** Main node of this representation */
 	private Group root;
-	/** Sceen of UMLClassDiagram */
+	/** Scene of UMLClassDiagram */
 	private Scene classDiagramScene;
 
 	/**
@@ -41,31 +47,49 @@ public class G_UMLClassDiagram {
 		this.diagram = diagram;
 		this.parent = parent;
 		selected = null;
+		/* Prepare template */
 		root = new Group();
+		Group relationsGroup = new Group();
+		relationsGroup.setId("relationsGroup");
+		Group classesGroup = new Group();
+		classesGroup.setId("classesGroup");
+		root.getChildren().add(relationsGroup);
+		root.getChildren().add(classesGroup);
 
 		/* Create new Scene */
 		Pane template = FXMLLoader.load(getClass().getResource("fxml/G_ClassDiagramSceene.fxml"));
 		template.getChildren().add(root);
 		classDiagramScene = new Scene(template);
+		/* Bind history to this scene */
+		History.getInstance(classDiagramScene);
 
 		/* Create gui classes*/
-		classes = new HashSet<>();
+		classes = new LinkedList<>();
 		for(UMLClass c : diagram.getClasses()){
 			G_UMLClass gc = new G_UMLClass(c, this);
 			classes.add(gc);
-			root.getChildren().add(gc.getNode());
+			((Group)root.lookup("#classesGroup")).getChildren().add(gc.getNode());
+		}
+	}
+	public void draw(Stage stage) throws IOException {
+
+		/* Check consistency of relations */
+		G_UMLRelationConsistencyCheck consistencyCheck = new G_UMLRelationConsistencyCheck(this, stage);
+		Set<UMLRelation> relationsCopy = new HashSet<>(diagram.getRelations());
+		for(UMLRelation rel : relationsCopy){
+			if(!consistencyCheck.checkConsistency(rel))
+				diagram.delRelation(rel);
 		}
 
 		/* Create gui relations*/
-		relations = new HashSet<>();
+		relations = new LinkedList<>();
 		for(UMLRelation r : diagram.getRelations()){
 			G_UMLRelation gr = new G_UMLRelation(r, this);
 			relations.add(gr);
-			root.getChildren().add(gr.getNode());
+			((Group)root.lookup("#relationsGroup")).getChildren().add(gr.getNode());
 		}
 		setEventHandlers();
 	}
-
 	/**
 	 * Method to get scene of UMLClassDiagram representation
 	 * @return scene of UMLClassDiagram representation
@@ -82,17 +106,38 @@ public class G_UMLClassDiagram {
 		classDiagramScene.getRoot().setOnMouseClicked(e -> {
 			if(e.isStillSincePress()){
 				System.out.println("Clear select");
-				if(selected != null)
-					selected.setSelect(false);
-				selected = null;
-				classDiagramScene.getRoot().lookup("#Edit").setDisable(true);
+				setSelected(null);
+			}
+		});
 
+		/* Delete selected object */
+		classDiagramScene.setOnKeyPressed( e-> {
+			if(selected != null && e.getCode() == KeyCode.DELETE){
+				delete(selected);
 			}
 		});
 
 		/* newRelation button*/
 		classDiagramScene.getRoot().lookup("#newRelation").setOnMouseClicked(e->{
-			System.out.println("New relation");
+			/* make new relation */
+			UMLRelation newRelation = new UMLRelation("New relation");
+			G_EditUMLRelationDialog dialog = new G_EditUMLRelationDialog(newRelation, this, true);
+			boolean isChanged;
+			/* Edit new relation */
+			try {
+				isChanged = dialog.showDialog(parent.getStage());
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			}
+			/* Add new class*/
+			if(isChanged){
+				System.out.println("isChanged");
+				try {
+					addGUMLRelation(new G_UMLRelation(newRelation, this));
+				} catch (IOException ex) {
+					throw new RuntimeException(ex);
+				}
+			}
 		});
 
 		/* newClass button*/
@@ -112,20 +157,25 @@ public class G_UMLClassDiagram {
 			if(isChanged){
 				System.out.println("isChanged");
 				try {
-					addUMLClass(newClass);
+					addGUMLClass(new G_UMLClass(newClass, this));
 				} catch (IOException ex) {
 					throw new RuntimeException(ex);
 				}
 			}
+		});
 
+		/* Delete button */
+		classDiagramScene.getRoot().lookup("#Delete").setOnMouseClicked(e->{
+			if(selected != null)
+				delete(selected);
 		});
 
 		/* edit button*/
 		classDiagramScene.getRoot().lookup("#Edit").setOnMouseClicked(e->{
 			if(Objects.equals(selected.getType(), "UMLClass")){
-				G_UMLClass toChange = ((G_UMLClass)selected);
+				UMLClass toChange = (UMLClass) ((G_UMLClass)selected).createCopy();
 				String oldName = toChange.getName();;
-				G_EditUMLClassDialog dialog = new G_EditUMLClassDialog(toChange.getUmlClass(), this, false);
+				G_EditUMLClassDialog dialog = new G_EditUMLClassDialog(toChange, this, false);
 				boolean isChanged;
 				try {
 					isChanged = dialog.showDialog(parent.getStage());
@@ -135,7 +185,26 @@ public class G_UMLClassDiagram {
 				if(isChanged){
 					if(!Objects.equals(oldName, toChange.getName()))
 						updatedClassName(oldName, toChange.getName());
-					toChange.update();
+					((G_UMLClass)selected).loadCopy(toChange);
+					((G_UMLClass)selected).update();
+				}
+			}
+			else{
+				UMLRelation toChange = (UMLRelation) ((G_UMLRelation)selected).createCopy();
+				G_EditUMLRelationDialog dialog = new G_EditUMLRelationDialog(toChange, this, false);
+				boolean isChanged;
+				try {
+					isChanged = dialog.showDialog(parent.getStage());
+				} catch (IOException ex) {
+					throw new RuntimeException(ex);
+				}
+				if(isChanged){
+					((G_UMLRelation)selected).loadCopy(toChange);
+					try {
+						updateRelations();
+					} catch (IOException ex) {
+						throw new RuntimeException(ex);
+					}
 				}
 			}
 		});
@@ -149,7 +218,17 @@ public class G_UMLClassDiagram {
 		if(this.selected != null)
 			this.selected.setSelect(false);
 		this.selected = selected;
-		classDiagramScene.getRoot().lookup("#Edit").setDisable(false);
+		/* set edit button*/
+		classDiagramScene.getRoot().lookup("#Edit").setDisable(selected == null);
+		classDiagramScene.getRoot().lookup("#Delete").setDisable(selected == null);
+		/* Move class to the top */
+		if(selected != null){
+			if(Objects.equals(selected.getType(), "UMLClass")){
+				Node c = ((G_UMLClass)selected).getNode();
+				((Group)root.lookup("#classesGroup")).getChildren().remove(c);
+				((Group)root.lookup("#classesGroup")).getChildren().add(c);
+			}
+		}
 	}
 
 	/**
@@ -180,10 +259,11 @@ public class G_UMLClassDiagram {
 	 * @throws IOException
 	 */
 	public void addUMLClass(UMLClass newClass) throws IOException {
-		G_UMLClass newGUMLClass = new G_UMLClass(newClass, this);
-		diagram.addClass(newClass);
-		classes.add(newGUMLClass);
-		root.getChildren().add(newGUMLClass.getNode());
+		if(diagram.addClass(newClass)){
+			G_UMLClass newGUMLClass = new G_UMLClass(newClass, this);
+			classes.add(newGUMLClass);
+			((Group)root.lookup("#classesGroup")).getChildren().add(newGUMLClass.getNode());
+		}
 	}
 
 	/**
@@ -197,19 +277,98 @@ public class G_UMLClassDiagram {
 			if (Objects.equals(rel.getTo(), oldName))
 				rel.setTo(newName);
 			/* Update from*/
-			if(rel.delFrom(oldName))
-				rel.addToFrom(newName);
+			if (Objects.equals(rel.getFrom(), oldName))
+				rel.setFrom(newName);
 		}
 	}
 
 	/**
-	 * Method to remove UMLRelation from UMLClassDiagram
-	 * @param toDel UMLRelation to be deleted
+	 * Method to add new selectable object
+	 * @param addNew New selectable object
+	 */
+	public void addNew(G_selectable addNew){
+		if(Objects.equals(addNew.getType(), "UMLClass"))
+			addGUMLClass((G_UMLClass) addNew);
+		else if(Objects.equals(addNew.getType(), "UMLRelation"))
+			addGUMLRelation((G_UMLRelation) addNew);
+		setSelected(null);
+	}
+
+	public void addGUMLClass(G_UMLClass newClass){
+		System.out.println("Add class");
+		/* Add deletion to history */
+		History.addEvent(new HE_addNew(this, newClass));
+		/* Add class */
+		newClass.setSelect(false);
+		classes.add(newClass);
+		((Group)root.lookup("#classesGroup")).getChildren().add(newClass.getNode());
+		diagram.addClass(newClass.getUmlClass());
+	}
+
+	public void addGUMLRelation(G_UMLRelation newRel){
+		System.out.println("Add relation");
+		/* Add deletion to history */
+		History.addEvent(new HE_addNew(this, newRel));
+		/* Add relation */
+		newRel.setSelect(false);
+		relations.add(newRel);
+		((Group)root.lookup("#relationsGroup")).getChildren().add(newRel.getNode());
+		diagram.addRelation(newRel.getUMLRelation());
+	}
+
+	/**
+	 * Method to deleted selected object
+	 * @param toDel Selected object to delete
+	 */
+	public void delete(G_selectable toDel){
+		if(Objects.equals(toDel.getType(), "UMLClass"))
+			delClass((G_UMLClass) toDel);
+		else if(Objects.equals(toDel.getType(), "UMLRelation"))
+			delRelation((G_UMLRelation) toDel);
+		setSelected(null);
+	}
+
+	/**
+	 * Method to remove G_UMLClass from G_UMLClassDiagram
+	 * @param toDel G_UMLClass to be deleted
 	 * @return true if deleted successfully
 	 */
-	public boolean delRelation(UMLRelation toDel, Node root){
-		this.root.getChildren().remove(root);
-		return diagram.delRelation(toDel);
+	public boolean delClass(G_UMLClass toDel){
+		System.out.println("Delete class");
+		/* Add deletion to history */
+		History.addEvent(new HE_delete(this, toDel));
+		/* remove class from relations */
+		for(int i = 0; i<relations.size(); i++){
+			G_UMLRelation rel = relations.get(i);
+			if( Objects.equals(rel.getUMLRelation().getTo(), toDel.getName()) ||
+				Objects.equals(rel.getUMLRelation().getFrom(), toDel.getName())){
+				if(delRelation(rel)){
+					System.out.println("Deleted: " + rel.getUMLRelation().getName());
+					i--;
+				}
+			}
+		}
+		/* Delete class */
+		((Group)root.lookup("#classesGroup")).getChildren().remove(toDel.getNode());
+		classes.remove(toDel);
+		try{updateRelations();}
+		catch(Exception ignored){}
+		return diagram.delClass(toDel.getName());
+	}
+
+	/**
+	 * Method to remove G_UMLRelation from G_UMLClassDiagram
+	 * @param toDel G_UMLRelation to be deleted
+	 * @return true if deleted successfully
+	 */
+	public boolean delRelation(G_UMLRelation toDel){
+		System.out.println("Delete relation");
+		/* Add deletion to history */
+		History.addEvent(new HE_delete(this, toDel));
+		/* Delete relation */
+		((Group)root.lookup("#relationsGroup")).getChildren().remove(toDel.getNode());
+		relations.remove(toDel);
+		return diagram.delRelation(toDel.getUMLRelation());
 	}
 
 	/**

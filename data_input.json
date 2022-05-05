@@ -134,18 +134,10 @@
     ],
     "relations": [
       {
-        "name": "Is_superior",
-        "type": "agregation",
-        "to": "Bus",
-        "from": ["Car"],
-        "cardinalityFrom": "oneToMany",
-        "cardinalityTo": "manyToMany"
-      },
-      {
         "name": "Fuck",
-        "type": "inheritance",
+        "type": "Generalization",
         "to": "Car",
-        "from": ["Bus", "Non-existingClass"],
+        "from": "Bus",
         "cardinalityFrom": "oneToMany",
         "cardinalityTo": "manyToMany"
       }

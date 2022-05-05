@@ -58,10 +58,7 @@ public class UMLClassDiagram {
 	 * @param className Name of deleted class
 	 */
 	private void clearRelations(String className){
-		relations.removeIf(r -> Objects.equals(r.getTo(), className) || (r.getFrom().contains(className) && r.getFrom().size() == 1));
-		for(UMLRelation r : relations){
-			r.delFrom(className);
-		}
+		relations.removeIf(r -> (Objects.equals(r.getTo(), className) || Objects.equals(r.getFrom(), className)));
 	}
 
 	/**
@@ -99,7 +96,7 @@ public class UMLClassDiagram {
 		List<UMLClassMethod> list = new ArrayList<>(c.getMethods());
 		/* Got through all relations and find all classes that class c is inheriting from*/
 		for(UMLRelation r : relations){
-			if(r.getFrom().contains(c.getName()) && Objects.equals(r.getType(), "in"))
+			if(Objects.equals(r.getFrom(), c.getName()) && Objects.equals(r.getType(), "in"))
 				/* Recursively call this method */
 				list.addAll(new LinkedList<>(getUMLClassInheritedMethodsHelper(findClassByName(r.getTo()))));
 		}
@@ -114,7 +111,7 @@ public class UMLClassDiagram {
 	private UMLClass findClassByName(String name){
 		for (UMLClass c : classes) {
 			if ( c.equals(new UMLClass(name)))
-			return c ;
+				return c ;
 		}
 		return new UMLClass("not found");
 	}

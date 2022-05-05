@@ -1,19 +1,29 @@
 package ija.app.gui;
 
+import ija.app.history.History;
+import ija.app.history.historyEvents.HE_edit;
+import ija.app.history.historyEvents.HE_edit_T;
+import ija.app.history.historyEvents.HE_move;
+import ija.app.history.historyEvents.HE_move_T;
 import ija.app.uml.classDiagram.UMLClass;
 import ija.app.uml.classDiagram.UMLClassAttribute;
 import ija.app.uml.classDiagram.UMLClassMethod;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.util.Objects;
+import java.util.Random;
 
-public class G_UMLClass implements G_selectable{
+public class G_UMLClass implements G_selectable, HE_move_T, HE_edit_T {
 	private G_UMLClassDiagram parent;
 	private UMLClass umlClass;
 	private VBox GumlClass;
+
+	private G_Position originPos;
 
 
 	/**
@@ -26,7 +36,11 @@ public class G_UMLClass implements G_selectable{
 		umlClass = c;
 		parent = d;
 		GumlClass = FXMLLoader.load(getClass().getResource("fxml/G_UMLClass.fxml"));
-
+		Random r = new Random();
+		System.out.println(d.getScene().getWidth());
+		GumlClass.setLayoutX(50 + (Math.abs(r.nextInt()) % 300));
+		GumlClass.setLayoutY(50 + (Math.abs(r.nextInt()) % 300));
+		originPos = null;
 		setEventHandlers();
 		update();
 	}
@@ -39,8 +53,11 @@ public class G_UMLClass implements G_selectable{
 		/* Dragging UMLClass*/
 		GumlClass.setOnMouseDragged(e -> {
 			if(!e.isStillSincePress()){
-				GumlClass.setLayoutX(e.getSceneX() - GumlClass.getWidth()/2);
-				GumlClass.setLayoutY(e.getSceneY() - GumlClass.getHeight()/2);
+				/* Save original position */
+				if(originPos == null)
+					originPos = new G_Position(GumlClass.getLayoutX(), GumlClass.getLayoutY());
+				GumlClass.setLayoutX(Math.min(Math.max(e.getSceneX() - GumlClass.getWidth()/2, 0), GumlClass.getScene().getWidth()- GumlClass.getWidth()));
+				GumlClass.setLayoutY(Math.min(Math.max(e.getSceneY() - GumlClass.getHeight()/2, 100), GumlClass.getScene().getHeight()-GumlClass.getHeight()));
 				try {
 					parent.updateRelations();
 				} catch (IOException ex) {
@@ -49,6 +66,14 @@ public class G_UMLClass implements G_selectable{
 			}
 		});
 
+		/* Detect end of drag */
+		GumlClass.setOnMouseReleased( e -> {
+			if(originPos != null){
+				History.addEvent(new HE_move(this, originPos));
+				originPos = null;
+			}
+
+		});
 		/* Selecting UMLClass*/
 		GumlClass.setOnMouseClicked(e -> {
 			if(e.isStillSincePress()){
@@ -57,6 +82,13 @@ public class G_UMLClass implements G_selectable{
 				e.consume();
 			}
 		});
+	}
+
+	public void moveTo(G_Position pos) throws IOException {
+		History.addEvent(new HE_move(this, new G_Position(GumlClass.getLayoutX(), GumlClass.getLayoutY())));
+		GumlClass.setLayoutX(pos.x);
+		GumlClass.setLayoutY(pos.y);
+		parent.updateRelations();
 	}
 
 	/**
@@ -126,6 +158,14 @@ public class G_UMLClass implements G_selectable{
 		return new G_Position(GumlClass.getLayoutX() +GumlClass.getWidth()/2, GumlClass.getLayoutY() + GumlClass.getHeight()/2);
 	}
 
+	/**
+	 * Get width and height of G_UMLClass
+	 * @return width and height of G_UMLClass
+	 */
+	public G_Position getBorders(){
+		return new G_Position(GumlClass.getWidth(), GumlClass.getHeight());
+	}
+
 
 	@Override
 	public void setSelect(boolean selected) {
@@ -143,5 +183,44 @@ public class G_UMLClass implements G_selectable{
 	@Override
 	public String getType() {
 		return "UMLClass";
+	}
+
+	@Override
+	public void loadCopy(Object copy) {
+		/* Add edit to history */
+		History.addEvent(new HE_edit(this, createCopy()));
+		/* Load copy */
+		UMLClass toCopy = (UMLClass) copy;
+		/* Update relations */
+		if(!Objects.equals(toCopy.getName(), umlClass.getName()))
+			parent.updatedClassName(umlClass.getName(), toCopy.getName());
+		/* Copy name */
+		umlClass.setName(toCopy.getName());
+		/* Copy is interface */
+		umlClass.setIsInterface(toCopy.isInterface());
+		/* Copy attributes */
+		umlClass.delAttributes();
+		for(UMLClassAttribute a : toCopy.getAttributes())
+			umlClass.addAttribute(a);
+		/* Copy methods */
+		umlClass.delMethods();
+		for(UMLClassMethod m : toCopy.getMethods())
+			umlClass.addMethod(m);
+		/* Update graphics representation*/
+		update();
+	}
+
+	@Override
+	public Object createCopy() {
+		/* Create copy */
+		UMLClass copy = new UMLClass(umlClass.getName(), umlClass.isInterface());
+		/* Copy attributes */
+		for(UMLClassAttribute a : umlClass.getAttributes())
+			copy.addAttribute(a);
+		/* Copy methods*/
+		for(UMLClassMethod m : umlClass.getMethods())
+			copy.addMethod(m);
+
+		return copy;
 	}
 }

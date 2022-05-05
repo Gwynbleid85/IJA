@@ -65,7 +65,7 @@ public class UMLClassMethod {
 
 	@Override
 	public String toString() {
-		return accessMod + " " + name;
+		return accessMod + " " + name + "()";
 	}
 
 	@Override

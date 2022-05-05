@@ -49,7 +49,7 @@ public class G_EditUMLClassDialog {
 	}
 
 	/**
-	 * Class that created modal window
+	 * Method that created modal window
 	 * @param parent Parent of modal window
 	 * @return true if class was changed
 	 * @throws IOException
@@ -67,7 +67,7 @@ public class G_EditUMLClassDialog {
 	private void loadData() throws IOException {
 		/* Set class name */
 		((TextField)template.lookup("#ClassName")).setText(umlClass.getName());
-		/* Set isInteface */
+		/* Set isInterface */
 		((CheckBox)template.lookup("#IsInterface")).selectedProperty().setValue(umlClass.isInterface());
 		/* Set attributes */
 		for(UMLClassAttribute attrib : umlClass.getAttributes())

@@ -48,7 +48,7 @@ public class UMLClassAttribute {
 
 	@Override
 	public String toString() {
-		return accessMod + " " + datatype + " " + name;
+		return accessMod + " " + name + ": " + datatype;
 	}
 
 	@Override

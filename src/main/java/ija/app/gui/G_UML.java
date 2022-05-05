@@ -45,13 +45,12 @@ public class G_UML {
 	}
 
 
-
 	/**
 	 * Get main scene of application (classDiagramScene)
 	 * @return main scene of application (classDiagramScene)
 	 */
 	public Scene getMainScene(){
-		return sequenceDiagrams.get(0).getScene();
+		return classDiagram.getScene();
 	}
 
 	/**
@@ -66,7 +65,7 @@ public class G_UML {
 
 		stage.show();
 	}
-
+	public void draw() throws IOException {classDiagram.draw(stage);}
 	public Stage getStage(){
 		return stage;
 	}
@@ -76,4 +75,7 @@ public class G_UML {
 		return uml;
 	}
 
+	public G_UMLClassDiagram getClassDiagram(){
+		return classDiagram;
+	}
 }
