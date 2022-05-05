@@ -26,10 +26,18 @@ public class UMLClassInstance implements consistency{
     }
 
     /**
+     * Constructor of UMLClassInstance
+     * @param cd classdiagram
+     */
+    public UMLClassInstance(UMLClassDiagram cd){
+        this.classDiagram = cd;
+    }
+
+    /**
      * Method for creating Instance ID
      * @return Instance ID
      */
-    public String createId(){
+    public String getId(){
         return name + ":" + className;
     }
 

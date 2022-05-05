@@ -10,7 +10,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Test class for IJA project - homework3.
@@ -171,7 +170,7 @@ public class AppTest {
 		UMLClassDiagram cd = new UMLClassDiagram();
 		/*Test successful creation of classInstance*/
 		UMLClassInstance classInstance = new UMLClassInstance(cd, "c1", "Car");
-		Assert.assertEquals("Test creating id", classInstance.createId(), "c1:Car");
+		Assert.assertEquals("Test creating id", classInstance.getId(), "c1:Car");
 		Assert.assertEquals("Test name", classInstance.getName(), "c1");
 		Assert.assertEquals("Test class name", classInstance.getClassName(), "Car");
 		/*Test changing value of attributes*/

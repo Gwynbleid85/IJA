@@ -104,7 +104,9 @@ public class UMLSequenceDiagram {
     //TODO: change position
 
 
-
+    public UMLClassDiagram getClassDiagram(){
+        return classDiagram;
+    }
 
 
 

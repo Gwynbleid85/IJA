@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="748.0" prefWidth="952.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+
+        <Button fx:id="newObject" layoutX="501.0" layoutY="716.0" mnemonicParsing="false" text="New object" />
+        <Button fx:id="newMessage" layoutX="664.0" layoutY="716.0" mnemonicParsing="false" text="New Message" />
+        <Button fx:id="Edit" layoutX="607.0" layoutY="716.0" mnemonicParsing="false" text="Edit" />
+        <ComboBox layoutX="725.0" layoutY="48.0" prefHeight="24.0" prefWidth="222.0" promptText="Choose sequence diagram">
+
+        </ComboBox>
+      <Button fx:id="newReturnMessage" layoutX="784.0" layoutY="716.0" mnemonicParsing="false" text="New return message" />
+
+    </children>
+</Pane>
