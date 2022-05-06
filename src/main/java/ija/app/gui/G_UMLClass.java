@@ -13,6 +13,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -60,9 +62,7 @@ public class G_UMLClass implements G_selectable, HE_move_T, HE_edit_T {
 				GumlClass.setLayoutY(Math.min(Math.max(e.getSceneY() - GumlClass.getHeight()/2, 40), GumlClass.getScene().getHeight()-GumlClass.getHeight()));
 				try {
 					parent.updateRelations();
-				} catch (IOException ex) {
-					throw new RuntimeException(ex);
-				}
+				} catch (Exception ignore) {}
 			}
 		});
 
@@ -144,8 +144,12 @@ public class G_UMLClass implements G_selectable, HE_move_T, HE_edit_T {
 		methods.getChildren().clear();
 		for(UMLClassMethod a : umlClass.getMethods()){
 			Label met = new Label(a.toString());
-			//Todo set css
-			//met.setFont(new Font(14));
+			/* Add @Override tag when method inherited */
+			for(UMLClassMethod inheritedMethod : parent.getDiagram().getUMLClassInheritedMethods(getName())){
+				if(Objects.equals(inheritedMethod.getName(), a.getName())){
+					met.setText(met.getText() + " @Override");
+				}
+			}
 			methods.getChildren().add(met);
 		}
 	}

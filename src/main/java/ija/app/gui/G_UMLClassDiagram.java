@@ -6,6 +6,7 @@ import ija.app.history.History;
 import ija.app.history.historyEvents.HE_addAndDelete_T;
 import ija.app.history.historyEvents.HE_addNew;
 import ija.app.history.historyEvents.HE_delete;
+import ija.app.uml.ClassPosition;
 import ija.app.uml.UML;
 import ija.app.uml.classDiagram.UMLClass;
 import ija.app.uml.classDiagram.UMLClassDiagram;
@@ -20,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -79,6 +81,9 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 			classes.add(gc);
 			((Group)root.lookup("#classesGroup")).getChildren().add(gc.getNode());
 		}
+
+		/* Move classes to defined position */
+		loadFilePositions();
 	}
 
 	public void setMenu(){
@@ -97,6 +102,9 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 
 		});
 		save.setOnAction( e -> {
+			/* Save classes positions */
+			saveFilePositions();
+			/* Save everything to file */
 			FileChooser fileChooser = new FileChooser();
 			File file = fileChooser.showSaveDialog(parent.getStage());
 			parent.getUml().storeDiagramsToFile(file.getAbsolutePath());
@@ -273,7 +281,8 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 					if(!Objects.equals(oldName, toChange.getName()))
 						updatedClassName(oldName, toChange.getName());
 					((G_UMLClass)selected).loadCopy(toChange);
-					((G_UMLClass)selected).update();
+					for(G_UMLClass c : classes)
+						c.update();
 				}
 			}
 			else{
@@ -287,11 +296,7 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 				}
 				if(isChanged){
 					((G_UMLRelation)selected).loadCopy(toChange);
-					try {
-						updateRelations();
-					} catch (IOException ex) {
-						throw new RuntimeException(ex);
-					}
+					updateRelations();
 				}
 			}
 		});
@@ -449,7 +454,6 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 	 * @return true if deleted successfully
 	 */
 	public boolean delRelation(G_UMLRelation toDel){
-		System.out.println("Delete relation");
 		/* Add deletion to history */
 		History.addEvent(new HE_delete(this, toDel));
 		/* Delete relation */
@@ -461,11 +465,38 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 	/**
 	 * Method to update graphical representation of UMLRelations
 	 */
-	public void updateRelations() throws IOException {
-		for(G_UMLRelation r : relations){
-			r.update();
+	public void updateRelations(){
+		try {
+			for(G_UMLRelation r : relations)
+					r.update();
+		} catch(Exception ignore){};
+	}
+
+	public void loadFilePositions() {
+		for(ClassPosition pos : diagram.getClassPositions()){
+			for(G_UMLClass gUmlClass : classes){
+				if(Objects.equals(pos.getName(), gUmlClass.getName())){
+					try{
+						((VBox)gUmlClass.getNode()).setLayoutX(pos.getX());
+						((VBox)gUmlClass.getNode()).setLayoutY(pos.getY());
+					}catch(Exception ignored){}
+				}
+			}
 		}
 	}
 
+	public void saveFilePositions(){
+		diagram.clearClassPositions();
+		for(G_UMLClass gUmlClass : classes){
+			diagram.addToClassPositions(new ClassPosition(gUmlClass.getName(),
+											gUmlClass.getNode().getLayoutX(),
+											gUmlClass.getNode().getLayoutY())
+										);
+		}
+	}
+
+	public UMLClassDiagram getDiagram(){
+		return diagram;
+	}
 
 }

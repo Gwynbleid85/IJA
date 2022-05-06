@@ -126,6 +126,9 @@ public class G_UMLSequenceDiagram {
 
         });
         save.setOnAction( e -> {
+            /* Save classes positions */
+            parent.getClassDiagram().saveFilePositions();
+            /* Save everything to file */
             FileChooser fileChooser = new FileChooser();
             File file = fileChooser.showSaveDialog(parent.getStage());
             parent.getUml().storeDiagramsToFile(file.getAbsolutePath());

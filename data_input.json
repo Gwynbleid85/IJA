@@ -141,6 +141,13 @@
         "cardinalityFrom": "oneToMany",
         "cardinalityTo": "manyToMany"
       }
+    ],
+    "classPositions": [
+      {
+        "name": "asdf",
+        "x" : 1234,
+        "y" : 1234
+      }
     ]
   },
   "sequenceDiagrams": [

@@ -118,8 +118,8 @@ public class G_UML {
 	}
 
 	public void changeUML(UML newUML) throws IOException {
+		this.uml = newUML;
 		classDiagram = new G_UMLClassDiagram(uml.getClassDiagram(), this);
-
 		sequenceDiagrams = new ArrayList<>();
 		for (UMLSequenceDiagram sd: uml.getSequenceDiagrams()){
 			sequenceDiagrams.add(new G_UMLSequenceDiagram(sd, this)); //add all sequence diagrams into list

@@ -5,8 +5,11 @@ import ija.app.uml.classDiagram.UMLClassDiagram;
 import ija.app.uml.sequenceDiagram.UMLSequenceDiagram;
 
 import java.io.*;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -20,12 +23,14 @@ public class UML {
     private List<UMLSequenceDiagram> sequenceDiagrams;
     //private GUIClassDiagram classDiagram; todo
 
+
+
     /**
      * Constructor of UML
      */
     public UML(){
         this.classDiagram = new UMLClassDiagram();
-        this.sequenceDiagrams = new LinkedList<UMLSequenceDiagram>();
+        this.sequenceDiagrams = new LinkedList<>();
     }
 
     /**

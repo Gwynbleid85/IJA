@@ -1,4 +1,6 @@
 package ija.app.uml.classDiagram;
+import ija.app.uml.ClassPosition;
+
 import java.util.*;
 
 /**
@@ -11,9 +13,13 @@ public class UMLClassDiagram {
 	private Set<UMLClass> classes;
 	private Set<UMLRelation> relations;
 
+	/* Position of classes to load and save from/to file */
+	private Set<ClassPosition> classPositions;
+
 	public UMLClassDiagram(){
 		this.classes = new HashSet<>();
 		this.relations = new HashSet<>();
+		this.classPositions = new HashSet<>();
 	}
 
 	public UMLClassDiagram(Set<UMLClass> classes, Set<UMLRelation> relations){
@@ -81,8 +87,13 @@ public class UMLClassDiagram {
 		if(! classes.contains(new UMLClass(className)))
 			return null;
 		UMLClass c = findClassByName(className);
-		List<UMLClassMethod> list = new ArrayList<>(getUMLClassInheritedMethodsHelper(c));
-		list.removeAll(c.getMethods());
+		List<UMLClassMethod> list = new ArrayList<>();
+		/* Got through all relations and find all classes that class c is inheriting from*/
+		for(UMLRelation r : relations){
+			if(Objects.equals(r.getFrom(), c.getName()) && Objects.equals(r.getType(), "Generalization"))
+				/* Call helper method to get deeper inheritance*/
+				list.addAll(new LinkedList<>(getUMLClassInheritedMethodsHelper(findClassByName(r.getTo()))));
+		}
 		return list;
 	}
 
@@ -96,7 +107,7 @@ public class UMLClassDiagram {
 		List<UMLClassMethod> list = new ArrayList<>(c.getMethods());
 		/* Got through all relations and find all classes that class c is inheriting from*/
 		for(UMLRelation r : relations){
-			if(Objects.equals(r.getFrom(), c.getName()) && Objects.equals(r.getType(), "in"))
+			if(Objects.equals(r.getFrom(), c.getName()) && Objects.equals(r.getType(), "Generalization"))
 				/* Recursively call this method */
 				list.addAll(new LinkedList<>(getUMLClassInheritedMethodsHelper(findClassByName(r.getTo()))));
 		}
@@ -114,6 +125,18 @@ public class UMLClassDiagram {
 				return c ;
 		}
 		return new UMLClass("not found");
+	}
+
+	public Set<ClassPosition> getClassPositions(){
+		return classPositions;
+	}
+
+	public void clearClassPositions(){
+		classPositions = new HashSet<>();
+	}
+
+	public void addToClassPositions(ClassPosition position){
+		classPositions.add(position);
 	}
 
 }
