@@ -11,6 +11,7 @@ public class UMLMessage {
     private String from;
     private String to;
     private String message;
+    private Boolean isReturn;
     private UMLClassDiagram classDiagram;
     private UMLSequenceDiagram sequenceDiagram;
 
@@ -21,9 +22,10 @@ public class UMLMessage {
      * @param to Name of instance, to which message goes
      * @param message Content of message
      */
-    public UMLMessage(UMLClassDiagram classDiagram, UMLSequenceDiagram sequenceDiagram, String from, String to, String message){
+    public UMLMessage(UMLClassDiagram classDiagram, UMLSequenceDiagram sequenceDiagram, String from, String to, String message, Boolean isReturn){
         this.classDiagram = classDiagram;
         this.sequenceDiagram = sequenceDiagram;
+        this.isReturn = isReturn;
         this.from = from;
         this.to = to;
         this.message = message;
@@ -74,6 +76,10 @@ public class UMLMessage {
      */
     public void setMessage(String message){
         this.message = message;
+    }
+
+    public Boolean getIsReturn(){
+        return isReturn;
     }
 
 

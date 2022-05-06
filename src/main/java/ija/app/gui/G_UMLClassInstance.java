@@ -4,14 +4,15 @@ import ija.app.uml.sequenceDiagram.UMLClassInstance;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Line;
 
 import java.io.IOException;
 
 public class G_UMLClassInstance implements G_selectable{
     private G_UMLSequenceDiagram parent;
     private UMLClassInstance umlInstance;
-    private VBox GumlInstance;
+    private AnchorPane GumlInstance;
 
     /**
      * Constructor of GUI UMLClassInstance
@@ -40,6 +41,7 @@ public class G_UMLClassInstance implements G_selectable{
             }
             try{
                 parent.updateMessages();
+                parent.positionLifelines();
             }catch(IOException exception){
                 throw new RuntimeException(exception);
             }
@@ -58,12 +60,14 @@ public class G_UMLClassInstance implements G_selectable{
     /**
      * Method which updates name of Instance
      */
-    private void updateText(){
+    public void updateText(){
         //update instance name
         ((Label)GumlInstance.lookup("#instanceLabel")).setText(umlInstance.getId());
         //update messages
 
     }
+
+
 
     /**
      * Method which gets position of the Instance //todo y axis, at start x axis not counting
@@ -71,14 +75,8 @@ public class G_UMLClassInstance implements G_selectable{
      * @return
      */
     public G_Position getPos(G_UMLMessage m){
-        /*
-        if(dragged){
-            y_axis =
-        }
-        double y_axis =
 
-         */
-        return new G_Position(GumlInstance.getLayoutX() +GumlInstance.getWidth()/2, 100+ GumlInstance.getLayoutY() + parent.getMessageOrder(m) * 50);
+        return new G_Position(GumlInstance.getLayoutX() + GumlInstance.getWidth()/2, 100+ GumlInstance.getLayoutY() + parent.getMessageOrder(m) * 50);
 
     }
 
@@ -125,5 +123,10 @@ public class G_UMLClassInstance implements G_selectable{
     @Override
     public String getType() {
         return "UMLClassInstance";
+    }
+
+
+    public UMLClassInstance getUmlInstance(){
+       return umlInstance;
     }
 }

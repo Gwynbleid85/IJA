@@ -165,17 +165,20 @@
         {
           "from": "c1:Car",
           "to": "c2:Car",
-          "message": "count"
+          "message": "count",
+          "isReturn": true
+        },
+        {
+          "from": "c1:Car",
+          "to": "c2:Car",
+          "message": "ride",
+          "isReturn": false
         },
         {
           "from": "c2:Car",
-          "to": "c1:Car",
-          "message": "ride"
-        },
-        {
-          "from": "c3:Bus",
-          "to": "c2:Car",
-          "message": "ride"
+          "to": "c3:Bus",
+          "message": "ride",
+          "isReturn": true
         }
       ]
     },
@@ -195,12 +198,14 @@
         {
           "from": "x1:Bus",
           "to": "x2:Bus",
-          "message": "slow_down"
+          "message": "slow_down",
+          "isReturn": true
         },
         {
           "from": "x2:Bus",
           "to": "x1:Bus",
-          "message": "ride"
+          "message": "ride",
+          "isReturn": false
         }
       ]
     }

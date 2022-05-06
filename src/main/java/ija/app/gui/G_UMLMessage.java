@@ -4,6 +4,7 @@ import ija.app.uml.sequenceDiagram.UMLMessage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
 import javafx.scene.layout.VBox;
 
@@ -11,15 +12,23 @@ import java.io.IOException;
 
 public class G_UMLMessage {
     private UMLMessage message;
-    private G_UMLSequenceDiagram parent ;
-    private Line root;
+    private G_UMLSequenceDiagram parent;
+    private AnchorPane root;
 
     public G_UMLMessage(UMLMessage mes, G_UMLSequenceDiagram sd) throws IOException {
         message = mes;
         parent = sd;
-        root = FXMLLoader.load(getClass().getResource("fxml/G_UMLMessage.fxml"));
-
-        //((Label)root.lookup("#labelMessage")).setText(message.getMessage() + "()");//todo
+        /*If is a message with method */
+        if(!message.getIsReturn()){
+            root = FXMLLoader.load(getClass().getResource("fxml/G_UMLMessage.fxml"));
+            ((Label)root.lookup("#messageLabel")).setText(message.getMessage() + "()");
+        }
+        /*If is a return message */
+        else{
+            root = FXMLLoader.load(getClass().getResource("fxml/G_UMLReturnMessage.fxml"));
+            ((Label)root.lookup("#messageLabel")).setText(message.getMessage());
+        }
+        //todo: message which from one instance to same instance
         setEventHandlers();
         updatePosition();
     }
@@ -28,8 +37,8 @@ public class G_UMLMessage {
     private void setEventHandlers(){
         /*Dragging UMLMessage */
         root.setOnMouseDragged(e -> {
-           root.setStartY(e.getSceneY());
-           root.setEndY(e.getSceneY());
+            ((Line)root.lookup("#messageLine")).setStartY(e.getSceneY());
+            ((Line)root.lookup("#messageLine")).setEndY(e.getSceneY());
             try {
                 parent.updateMessages();
             } catch (IOException ex) {
@@ -78,15 +87,47 @@ public class G_UMLMessage {
         Double length = from.x - to.x;
         root.setPrefWidth(length);
         */
-
-        root.setStartX(from.x);
-        root.setEndX(to.x);
-        root.setStartY(from.y);
-        root.setEndY(to.y);
+        Line messageLine = ((Line)root.lookup("#messageLine"));
+        messageLine.setStartX(from.x);
+        messageLine.setEndX(to.x);
+        messageLine.setStartY(from.y);
+        messageLine.setEndY(to.y);
     }
 
 
     public Node getNode() {
         return root;
+    }
+
+    /**
+     * Method which gets the UML representation of message
+     * @return UMLMessage
+     */
+    public UMLMessage getUMLMessage() {
+        return message;
+    }
+
+    /**
+     * Method which gets 'from' instance of message
+     * @return from instance
+     */
+    public String getFrom(){
+        return message.getFrom();
+    }
+
+    /**
+     * Method which gets 'to' instance of message
+     * @return to instance
+     */
+    public String getTo(){
+        return message.getTo();
+    }
+
+    /**
+     * Method which gets type of message
+     * @return true if is a return message
+     */
+    public Boolean isReturnMessage(){
+        return message.getIsReturn();
     }
 }

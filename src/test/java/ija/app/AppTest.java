@@ -191,7 +191,7 @@ public class AppTest {
 	public void testUMLMessage(){
 		UMLClassDiagram cd = new UMLClassDiagram();
 		/*Test successful creation of UMLMessage*/
-		UMLMessage msg = new UMLMessage(cd, new UMLSequenceDiagram("sd1", cd), "c1:Car", "b1:Bus", "Count max");
+		UMLMessage msg = new UMLMessage(cd, new UMLSequenceDiagram("sd1", cd), "c1:Car", "b1:Bus", "Count max", true);
 		Assert.assertEquals("Test UMLMessage value", msg.getMessage(), "Count max");
 		Assert.assertEquals("Test UMLMessage 'from' instance", msg.getFrom(), "c1:Car");
 		Assert.assertEquals("Test UMLMessage 'to' instance", msg.getTo(), "b1:Bus");
@@ -225,7 +225,7 @@ public class AppTest {
 		Assert.assertFalse("Test add existing instance", sd.addInstance(new UMLClassInstance(cd, "c1", "Car")));
 		Assert.assertFalse("Test removing non-existing instance", sd.removeInstance(new UMLClassInstance(cd, "x1", "Hello")));
 		/*Test UMLMessage*/
-		UMLMessage message = new UMLMessage(cd, sd,"c1:Car", "b1:Bus", "Count max");
+		UMLMessage message = new UMLMessage(cd, sd,"c1:Car", "b1:Bus", "Count max", true);
 		sd.addMessage(message);
 		Assert.assertTrue("Test removing existing message", sd.removeMessage(message));
 	}

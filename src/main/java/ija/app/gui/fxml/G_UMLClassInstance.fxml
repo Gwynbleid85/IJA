@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="129.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="167.0" prefWidth="68.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="70.0" prefWidth="129.0" style="-fx-background-color: #fed8b1;">
-         <children>
-            <Label fx:id="instanceLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="70.0" prefWidth="129.0" style="-fx-border-color: black; -fx-background-color: white;" text="Label" />
-         </children>
-      </AnchorPane>
-      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="332.0" prefWidth="129.0">
-         <children>
-            <Line fx:id="lifeLine" endX="-59.5" endY="336.0" layoutX="124.0" layoutY="-6.0" startX="-59.5" startY="6.0" style="-fx-stroke-dash-array: 10;" />
-         </children>
-      </AnchorPane>
+      <Label fx:id="instanceLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="50.0" style="-fx-border-color: black; -fx-background-color: white;" text="Label">
+         <padding>
+            <Insets left="15.0" right="15.0" />
+         </padding>
+      </Label>
+      <Line fx:id="lifeLine" style="-fx-stroke-dash-array: 10;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="50.0" />
    </children>
-</VBox>
+</AnchorPane>
