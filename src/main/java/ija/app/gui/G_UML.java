@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class G_UML {
@@ -50,7 +51,7 @@ public class G_UML {
 	 * @return main scene of application (classDiagramScene)
 	 */
 	public Scene getMainScene(){
-		return sequenceDiagrams.get(0).getScene();
+		return classDiagram.getScene();
 	}
 
 	/**
@@ -59,10 +60,20 @@ public class G_UML {
 	 * @param name If type == UMLSequenceDiagram -> name of UMLSequenceDiagram
 	 */
 	public void setScene(int type, String name){
-		//TODO: set right size (???stage.getScene().getSize()???)
-		if(type == 0)
+		if(type == 0){
 			stage.setScene(classDiagram.getScene());
+			classDiagram.setMenu();
+			System.out.println("Changing to class diagram 2");
 
+		}
+		else if(type == 1) {
+			G_UMLSequenceDiagram diagram = getSequenceDiagramsByName(name);
+			if(diagram!= null){
+				stage.setScene(diagram.getScene());
+				diagram.setMenu();
+			}
+
+		}
 		stage.show();
 	}
 
@@ -78,12 +89,43 @@ public class G_UML {
 		return stage;
 	}
 
-
+	public boolean createNewSeqDiagram(String name) throws IOException {
+		if(getSequenceDiagramsByName(name) == null){
+			G_UMLSequenceDiagram newDia = new G_UMLSequenceDiagram(new UMLSequenceDiagram(name, uml.getClassDiagram()), this);
+			sequenceDiagrams.add(newDia);
+			uml.addSequenceDiagram(newDia.getDiagram());
+			return true;
+		}
+		return false;
+	}
 	public UML getUml(){
 		return uml;
 	}
 
 	public G_UMLClassDiagram getClassDiagram(){
 		return classDiagram;
+	}
+	public List<UMLSequenceDiagram> getSequenceDiagrams(){
+		return uml.getSequenceDiagrams();
+	}
+
+	private G_UMLSequenceDiagram getSequenceDiagramsByName(String name){
+		for(G_UMLSequenceDiagram c : sequenceDiagrams){
+			if(Objects.equals(c.getDiagram().getName(), name))
+				return c;
+		}
+		return null;
+	}
+
+	public void changeUML(UML newUML) throws IOException {
+		classDiagram = new G_UMLClassDiagram(uml.getClassDiagram(), this);
+
+		sequenceDiagrams = new ArrayList<>();
+		for (UMLSequenceDiagram sd: uml.getSequenceDiagrams()){
+			sequenceDiagrams.add(new G_UMLSequenceDiagram(sd, this)); //add all sequence diagrams into list
+		}
+
+		stage.setScene(getMainScene());
+		draw();
 	}
 }

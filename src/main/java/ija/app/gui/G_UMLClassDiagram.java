@@ -1,23 +1,29 @@
 package ija.app.gui;
 
-import ija.app.gui.dialogs.G_EditUMLClassDialog;
-import ija.app.gui.dialogs.G_EditUMLRelationDialog;
-import ija.app.gui.dialogs.G_UMLRelationConsistencyCheck;
+import com.sun.javafx.collections.ImmutableObservableList;
+import ija.app.gui.dialogs.*;
 import ija.app.history.History;
 import ija.app.history.historyEvents.HE_addAndDelete_T;
 import ija.app.history.historyEvents.HE_addNew;
 import ija.app.history.historyEvents.HE_delete;
+import ija.app.uml.UML;
 import ija.app.uml.classDiagram.UMLClass;
 import ija.app.uml.classDiagram.UMLClassDiagram;
 import ija.app.uml.classDiagram.UMLRelation;
+import ija.app.uml.sequenceDiagram.UMLSequenceDiagram;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -62,6 +68,9 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 		classDiagramScene = new Scene(template);
 		/* Bind history to this scene */
 		History.getInstance(classDiagramScene);
+		/* Set menu */
+		setMenu();
+		setEventHandlers();
 
 		/* Create gui classes*/
 		classes = new LinkedList<>();
@@ -71,6 +80,85 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 			((Group)root.lookup("#classesGroup")).getChildren().add(gc.getNode());
 		}
 	}
+
+	public void setMenu(){
+		((MenuBar)classDiagramScene.lookup("#MenuBar")).getMenus().clear();
+		/* Set file op buttons*/
+		MenuItem load = new MenuItem("Load from file");
+		MenuItem save = new MenuItem("Save to file");
+		load.setOnAction( e -> {
+			try {
+				G_LoadFile dialog = new G_LoadFile(parent.getStage(), parent);
+				UML newUML = dialog.showDialog();
+				parent.changeUML(newUML);
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			}
+
+		});
+		save.setOnAction( e -> {
+			FileChooser fileChooser = new FileChooser();
+			File file = fileChooser.showSaveDialog(parent.getStage());
+			parent.getUml().storeDiagramsToFile(file.getAbsolutePath());
+		});
+		Menu fileMenu = new Menu("File");
+		fileMenu.getItems().add(load);
+		fileMenu.getItems().add(save);
+
+		/* Set history buttons */
+		MenuItem undo = new MenuItem("Undo (Ctrl+z)");
+		MenuItem redo = new MenuItem("Redo (Ctrl+Shift+z)");
+		undo.setOnAction( e -> {
+			History.undoStatic();
+		});
+		redo.setOnAction( e -> {
+			History.redoStatic();
+		});
+		Menu edit = new Menu("Edit");
+		edit.getItems().add(undo);
+		edit.getItems().add(redo);
+		/* Add all to menuBar*/
+		((MenuBar)classDiagramScene.lookup("#MenuBar")).getMenus().add(fileMenu);
+		((MenuBar)classDiagramScene.lookup("#MenuBar")).getMenus().add(edit);
+
+		/* Changing diagrams buttons */
+		/* Class diagram button */
+		classDiagramScene.lookup("#SetClassDiagram").setDisable(true);
+		//
+		classDiagramScene.lookup("#SetClassDiagram").setOnMouseClicked( e -> {
+			parent.setScene(0, "");
+			System.out.println("Changing to class diagram 11");
+
+		});
+
+		/* Sequence diagram button */
+		List<String> asdf = new ArrayList<>();
+		for(UMLSequenceDiagram s : parent.getSequenceDiagrams())
+			asdf.add(s.getName());
+		ObservableList<String> seqDiagrams = FXCollections.observableArrayList(asdf);
+		((ComboBox<String>)classDiagramScene.lookup("#SetSeqDiagram")).setOnAction(e->{});
+		((ComboBox<String>)classDiagramScene.lookup("#SetSeqDiagram")).setItems(seqDiagrams);
+		((ComboBox<String>)classDiagramScene.lookup("#SetSeqDiagram")).promptTextProperty().set("Choose sequence diagram");
+		((ComboBox<String>)classDiagramScene.lookup("#SetSeqDiagram")).setOnAction( e -> {
+			parent.setScene(1, ((ComboBox<String>) classDiagramScene.lookup("#SetSeqDiagram")).getSelectionModel().getSelectedItem());
+			System.out.println("Changing to class diagram 12");
+
+		});
+
+		((Button)classDiagramScene.lookup("#newSeqDia")).setOnAction( e -> {
+			// New Sequence diagram
+			try {
+				G_NewSeqDiagram dialog = new G_NewSeqDiagram(parent.getStage(), parent);
+				String newName = dialog.showDialog();
+				parent.setScene(1, newName);
+				System.out.println("Changing to class diagram 13");
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			}
+		});
+
+	}
+
 	public void draw(Stage stage) throws IOException {
 
 		/* Check consistency of relations */
@@ -88,7 +176,6 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 			relations.add(gr);
 			((Group)root.lookup("#relationsGroup")).getChildren().add(gr.getNode());
 		}
-		setEventHandlers();
 	}
 	/**
 	 * Method to get scene of UMLClassDiagram representation

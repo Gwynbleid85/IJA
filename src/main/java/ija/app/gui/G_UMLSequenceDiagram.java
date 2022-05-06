@@ -1,19 +1,29 @@
 package ija.app.gui;
 
 
+import ija.app.gui.dialogs.G_LoadFile;
+import ija.app.gui.dialogs.G_NewSeqDiagram;
+import ija.app.history.History;
+import ija.app.uml.UML;
 import ija.app.gui.dialogs.G_UMLInstanceDialog;
 import ija.app.uml.sequenceDiagram.UMLClassInstance;
 import ija.app.uml.sequenceDiagram.UMLMessage;
 import ija.app.uml.sequenceDiagram.UMLSequenceDiagram;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -46,6 +56,7 @@ public class G_UMLSequenceDiagram {
         this.parent = parent;
         selected = null;
         root = new Group();
+
         /* Create new Scene */
         AnchorPane template = FXMLLoader.load(getClass().getResource("fxml/G_SequenceDiagramScene.fxml"));
         template.getChildren().add(root);
@@ -77,6 +88,7 @@ public class G_UMLSequenceDiagram {
             messageOrder.add(gm); //for use of getting position
             root.getChildren().add(gm.getNode());
         }
+        setMenu();
         setEventHandlers();
         updateMessages();
         positionLifelines();
@@ -97,6 +109,80 @@ public class G_UMLSequenceDiagram {
     }
 
 
+
+    public void setMenu(){
+        ((MenuBar)sequenceDiagramScene.lookup("#MenuBar")).getMenus().clear();
+        /* Set file op buttons*/
+        MenuItem load = new MenuItem("Load from file");
+        MenuItem save = new MenuItem("Save to file");
+        load.setOnAction( e -> {
+            try {
+                G_LoadFile dialog = new G_LoadFile(parent.getStage(), parent);
+                UML newUML = dialog.showDialog();
+                parent.changeUML(newUML);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        });
+        save.setOnAction( e -> {
+            FileChooser fileChooser = new FileChooser();
+            File file = fileChooser.showSaveDialog(parent.getStage());
+            parent.getUml().storeDiagramsToFile(file.getAbsolutePath());
+        });
+        Menu fileMenu = new Menu("File");
+        fileMenu.getItems().add(load);
+        fileMenu.getItems().add(save);
+
+        /* Set history buttons */
+        MenuItem undo = new MenuItem("Undo (Ctrl+z)");
+        MenuItem redo = new MenuItem("Redo (Ctrl+Shift+z)");
+        undo.setOnAction( e -> {
+            History.undoStatic();
+        });
+        redo.setOnAction( e -> {
+            History.redoStatic();
+        });
+        Menu edit = new Menu("Edit");
+        edit.getItems().add(undo);
+        edit.getItems().add(redo);
+        /* Add all to menuBar*/
+        ((MenuBar)sequenceDiagramScene.lookup("#MenuBar")).getMenus().add(fileMenu);
+        ((MenuBar)sequenceDiagramScene.lookup("#MenuBar")).getMenus().add(edit);
+
+        /* Changing diagrams buttons */
+        /* Class diagram button */
+        sequenceDiagramScene.lookup("#SetClassDiagram").setOnMouseClicked( e -> {
+            System.out.println("Changing to class diagram 1");
+            parent.setScene(0, "");
+        });
+
+        /* Sequence diagram button */
+        List<String> asdf = new ArrayList<>();
+        for(UMLSequenceDiagram s : parent.getSequenceDiagrams())
+        		asdf.add(s.getName());
+        ObservableList<String> seqDiagrams = FXCollections.observableArrayList(asdf);
+        ((ComboBox<String>)sequenceDiagramScene.lookup("#SetSeqDiagram")).getItems().clear();
+        ((ComboBox<String>)sequenceDiagramScene.lookup("#SetSeqDiagram")).setItems(seqDiagrams);
+
+        ((ComboBox<String>)sequenceDiagramScene.lookup("#SetSeqDiagram")).promptTextProperty().setValue(this.diagram.getName());
+
+        ((ComboBox<String>)sequenceDiagramScene.lookup("#SetSeqDiagram")).setOnAction( e -> {
+            parent.setScene(1, ((ComboBox<String>) sequenceDiagramScene.lookup("#SetSeqDiagram")).getSelectionModel().getSelectedItem());
+        });
+
+        ((Button)sequenceDiagramScene.lookup("#newSeqDia")).setOnAction(e -> {
+            // New Sequence diagram
+            try {
+                G_NewSeqDiagram dialog = new G_NewSeqDiagram(parent.getStage(), parent);
+                String newName = dialog.showDialog();
+                parent.setScene(1, newName);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+    }
 
     /**
      * Set event handlers
@@ -232,7 +318,9 @@ public class G_UMLSequenceDiagram {
         diagram.addInstance(newInstance);
         instances.add(newGUMLInstance);
         root.getChildren().add(newGUMLInstance.getNode());
+
     }
+
 
 
 

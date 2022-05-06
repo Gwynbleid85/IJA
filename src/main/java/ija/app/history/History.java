@@ -46,11 +46,9 @@ public class History {
 		scene.addEventHandler(KeyEvent.KEY_PRESSED,  e -> {
 			instance.wasEvent = true;
 			if( e.getCode() == KeyCode.Z && e.isShortcutDown() && e.isShiftDown()){
-				System.out.println("History : redo");
 				instance.redo();
 			}
 			else if(e.getCode() == KeyCode.Z && e.isShortcutDown() ){
-				System.out.println("History : undo");
 				instance.undo();
 			}
 			instance.wasEvent = true;
@@ -72,7 +70,7 @@ public class History {
 				if(hisStack_1.size() > 10)
 					hisStack_1.remove(10);
 			}
-			System.out.println("Added event (" + wasEvent + ") (" + event.toString() + ")");
+			System.out.println("Added undo event (" + wasEvent + ") (" + event.toString() + ")");
 			hisStack_1.get(0).addEvent(event);
 		}
 		else{
@@ -87,6 +85,9 @@ public class History {
 		wasEvent = false;
 	}
 
+	public static void undoStatic(){
+		instance.undo();
+	}
 	public void undo(){
 		if(hisStack_1.size() > 0){
 			goingBack = true;
@@ -96,6 +97,9 @@ public class History {
 		}
 	}
 
+	public static void redoStatic(){
+		instance.redo();
+	}
 	public void redo(){
 		if(hisStack_2.size() > 0){
 			hisStack_2.get(0).undo();

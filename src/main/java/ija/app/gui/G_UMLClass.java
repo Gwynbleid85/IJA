@@ -57,7 +57,7 @@ public class G_UMLClass implements G_selectable, HE_move_T, HE_edit_T {
 				if(originPos == null)
 					originPos = new G_Position(GumlClass.getLayoutX(), GumlClass.getLayoutY());
 				GumlClass.setLayoutX(Math.min(Math.max(e.getSceneX() - GumlClass.getWidth()/2, 0), GumlClass.getScene().getWidth()- GumlClass.getWidth()));
-				GumlClass.setLayoutY(Math.min(Math.max(e.getSceneY() - GumlClass.getHeight()/2, 100), GumlClass.getScene().getHeight()-GumlClass.getHeight()));
+				GumlClass.setLayoutY(Math.min(Math.max(e.getSceneY() - GumlClass.getHeight()/2, 40), GumlClass.getScene().getHeight()-GumlClass.getHeight()));
 				try {
 					parent.updateRelations();
 				} catch (IOException ex) {

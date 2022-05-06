@@ -3,7 +3,6 @@
     "classes": [
       {
         "name": "Car",
-        "isInterface": true,
         "attributes": [
           {
             "name": "max_speed",
@@ -25,11 +24,11 @@
             "name": "ride",
             "accessMod": "-"
           }
-        ]
+        ],
+        "isInterface": true
       },
       {
         "name": "Bus",
-        "isInterface": false,
         "attributes": [
           {
             "name": "num_of_seats",
@@ -51,11 +50,11 @@
             "name": "crash",
             "accessMod": "-"
           }
-        ]
+        ],
+        "isInterface": false
       },
       {
         "name": "Vehicle",
-        "isInterface": true,
         "attributes": [
           {
             "name": "max_speed",
@@ -77,11 +76,11 @@
             "name": "ride",
             "accessMod": "-"
           }
-        ]
+        ],
+        "isInterface": true
       },
       {
         "name": "Bike",
-        "isInterface": true,
         "attributes": [
           {
             "name": "max_speed",
@@ -103,11 +102,11 @@
             "name": "ride",
             "accessMod": "-"
           }
-        ]
+        ],
+        "isInterface": true
       },
       {
         "name": "Person",
-        "isInterface": true,
         "attributes": [
           {
             "name": "max_speed",
@@ -129,7 +128,14 @@
             "name": "ride",
             "accessMod": "-"
           }
-        ]
+        ],
+        "isInterface": true
+      },
+      {
+        "name": "Buass",
+        "attributes": [],
+        "methods": [],
+        "isInterface": false
       }
     ],
     "relations": [
@@ -138,8 +144,8 @@
         "type": "Generalization",
         "to": "Car",
         "from": "Buass",
-        "cardinalityFrom": "oneToMany",
-        "cardinalityTo": "manyToMany"
+        "cardinalityTo": "manyToMany",
+        "cardinalityFrom": "oneToMany"
       }
     ]
   },
@@ -159,7 +165,6 @@
           "name": "c3",
           "className": "Bus"
         }
-
       ],
       "messages": [
         {
@@ -211,5 +216,3 @@
     }
   ]
 }
-
-
