@@ -25,6 +25,9 @@ public class G_EditUMLRelationDialog {
 	private boolean isNew;
 	private boolean isChanged;
 
+	/**
+	 * @author Milos Hegr (xhegrm00)
+	 */
 	private ObservableList<String> RelTypes =  FXCollections.observableArrayList("Association", "Aggregation", "Composition", "Generalization");
 	private ObservableList<String> Cardinalities =  FXCollections.observableArrayList("1", "0..1", "*", "1..*", "None");
 

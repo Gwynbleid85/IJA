@@ -20,6 +20,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * @author Milos Hegr (xhegrm00)
+ * Class implements graphical representation of whole UML
+ */
 public class G_UML {
 
 	private Stage stage;

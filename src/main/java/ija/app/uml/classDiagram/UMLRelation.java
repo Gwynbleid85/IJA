@@ -39,67 +39,34 @@ public class UMLRelation{
 	//	name = "";
 	//}
 
-	/**
-	 * Getter of type attribute
-	 * @return New value of type attribute
-	 */
 	public String getType(){
 		return type;
 	}
 
-	/**
-	 * Setter of type attribute
-	 * Possible types (Association, Aggregation, Composition and Generalization)
-	 * @param type New value of type attribute
-	 */
 	public void setType(String type){
 		this.type = type;
 	}
 
-	/**
-	 * Getter of name attribute
-	 * @return Value of name attribute
-	 */
 	public String getName(){
 		return name;
 	}
 
-	/**
-	 * Setter of name attribute
-	 * @param name New value of name attribute
-	 */
 	public void setName(String name){
 		this.name = name;
 	}
 
-	/**
-	 * Getter of to attribute
-	 * @return Value of to attribute
-	 */
 	public String getTo(){
 		return to;
 	}
 
-	/**
-	 * Setter of to attribute
-	 * @param to New value for to attribute
-	 */
 	public void setTo(String to){
 		this.to = to;
 	}
 
-	/**
-	 * Getter of from attribute
-	 * @return Unmodifiable list from
-	 */
 	public String getFrom(){
 		return from;
 	}
 
-	/**
-	 * Method to add element to this.from list
-	 * @param from New from value
-	 */
 	public void setFrom(String from){
 		this.from = from;
 	}
@@ -129,9 +96,6 @@ public class UMLRelation{
 		if( ! classes.contains(new UMLClass(to)))
 			return false;
 		/*Check if all from classes exists*/
-		if( ! classes.contains(new UMLClass(from)))
-			return false;
-
-		return true;
+		return classes.contains(new UMLClass(from));
 	}
 }

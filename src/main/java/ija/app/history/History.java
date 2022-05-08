@@ -9,11 +9,19 @@ import javafx.stage.Stage;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Class representing history and undo/redo actions
+ * @author Milos Hegr (xhegrm00)
+ * Class implements DP singleton
+ */
 public class History {
 
 	private static History instance = null;
 	private Stage stage;
+
+	/** Stack for undo operations */
 	private List<HistoryEventSet> hisStack_1;
+	/** Stack for redo operations */
 	private List<HistoryEventSet> hisStack_2;
 
 	private int state;
@@ -27,6 +35,12 @@ public class History {
 		goingBack = false;
 		state = 0;
 	}
+
+	/**
+	 * Method implementing DP singleton
+	 * @param scene Where history should be listening
+	 * @return Singleton instance
+	 */
 	public static History getInstance(Scene scene){
 		if(instance == null){
 			instance = new History();
@@ -35,6 +49,10 @@ public class History {
 		return instance;
 	}
 
+	/**
+	 * Method to set event handlers
+	 * @param scene Where should History listen
+	 */
 	private static void addEventHandlers(Scene scene){
 
 		/* Reset event adder */
@@ -58,11 +76,20 @@ public class History {
 		return instance;
 	}
 
+	/**
+	 * Add event to History
+	 * @param event Event to be added
+	 */
 	public static void addEvent(HistoryEvent event){
 		if(instance != null)
 			instance.addEvent2(event);
 	}
 
+
+	/**
+	 * Add event to History
+	 * @param event Event to be added
+	 */
 	public void addEvent2(HistoryEvent event){
 		if(!goingBack){
 			if(wasEvent){
@@ -85,9 +112,16 @@ public class History {
 		wasEvent = false;
 	}
 
+	/**
+	 * Undo operation
+	 */
 	public static void undoStatic(){
 		instance.undo();
 	}
+
+	/**
+	 * Undo operation
+	 */
 	public void undo(){
 		if(hisStack_1.size() > 0){
 			goingBack = true;
@@ -97,9 +131,16 @@ public class History {
 		}
 	}
 
+	/**
+	 * Redo operation
+	 */
 	public static void redoStatic(){
 		instance.redo();
 	}
+
+	/**
+	 * Redo operation
+	 */
 	public void redo(){
 		if(hisStack_2.size() > 0){
 			hisStack_2.get(0).undo();

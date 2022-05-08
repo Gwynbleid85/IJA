@@ -12,6 +12,11 @@ import javafx.scene.transform.Rotate;
 import java.io.IOException;
 import java.util.Objects;
 
+
+/**
+ * @author Milos Hegr (xhegrm00)
+ * Class implements graphical representation of UMLRelation
+ */
 public class G_UMLRelation implements G_selectable, HE_edit_T {
 	private UMLRelation relation;
 	private G_UMLClassDiagram parent;
@@ -30,13 +35,17 @@ public class G_UMLRelation implements G_selectable, HE_edit_T {
 	private void setEventHandlers() {
 		root.setOnMouseClicked( e -> {
 			if(e.isStillSincePress()){
-				System.out.println("Select " + relation.getName());
 				setSelect(true);
 				e.consume();
 			}
 		});
+
 	}
 
+	/**
+	 * Update position of relation in gui
+	 * @throws IOException
+	 */
 	public void update() throws IOException {
 		/* Get positions of UMCLasses */
 		G_Position from;

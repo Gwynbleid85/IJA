@@ -1,5 +1,8 @@
 package ija.app.uml;
 
+/**
+ * Class to by able to save and load UMLClass positions to/from files
+ */
 public class ClassPosition {
 	private String name;
 	private double x;

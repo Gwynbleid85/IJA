@@ -3,6 +3,9 @@ package ija.app.history.historyEvents;
 import ija.app.gui.G_selectable;
 import ija.app.history.HistoryEvent;
 
+/**
+ * @author Milos Hegr (xhegrm00)
+ */
 public class HE_delete implements HistoryEvent {
 
 	private HE_addAndDelete_T origin;

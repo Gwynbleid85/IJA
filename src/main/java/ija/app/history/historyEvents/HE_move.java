@@ -5,6 +5,10 @@ import ija.app.history.HistoryEvent;
 
 import java.io.IOException;
 
+
+/**
+ * @author Milos Hegr (xhegrm00)
+ */
 public class HE_move  implements HistoryEvent {
 
 	private G_Position pos;

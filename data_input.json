@@ -3,7 +3,6 @@
     "classes": [
       {
         "name": "Car",
-        "isInterface": true,
         "attributes": [
           {
             "name": "max_speed",
@@ -25,11 +24,11 @@
             "name": "ride",
             "accessMod": "-"
           }
-        ]
+        ],
+        "isInterface": true
       },
       {
         "name": "Bus",
-        "isInterface": false,
         "attributes": [
           {
             "name": "num_of_seats",
@@ -51,11 +50,11 @@
             "name": "crash",
             "accessMod": "-"
           }
-        ]
+        ],
+        "isInterface": false
       },
       {
         "name": "Vehicle",
-        "isInterface": true,
         "attributes": [
           {
             "name": "max_speed",
@@ -77,11 +76,11 @@
             "name": "ride",
             "accessMod": "-"
           }
-        ]
+        ],
+        "isInterface": true
       },
       {
         "name": "Bike",
-        "isInterface": true,
         "attributes": [
           {
             "name": "max_speed",
@@ -103,11 +102,11 @@
             "name": "ride",
             "accessMod": "-"
           }
-        ]
+        ],
+        "isInterface": true
       },
       {
         "name": "Person",
-        "isInterface": true,
         "attributes": [
           {
             "name": "max_speed",
@@ -129,7 +128,19 @@
             "name": "ride",
             "accessMod": "-"
           }
-        ]
+        ],
+        "isInterface": true
+      },
+      {
+        "name": "Buass",
+        "attributes": [],
+        "methods": [
+          {
+            "name": "count",
+            "accessMod": "+"
+          }
+        ],
+        "isInterface": false
       }
     ],
     "relations": [
@@ -138,15 +149,40 @@
         "type": "Generalization",
         "to": "Car",
         "from": "Buass",
-        "cardinalityFrom": "oneToMany",
-        "cardinalityTo": "manyToMany"
+        "cardinalityTo": "manyToMany",
+        "cardinalityFrom": "oneToMany"
       }
     ],
     "classPositions": [
       {
-        "name": "asdf",
-        "x" : 1234,
-        "y" : 1234
+        "name": "Bus",
+        "x": 549.0,
+        "y": 109.0
+      },
+      {
+        "name": "Person",
+        "x": 60.0,
+        "y": 178.0
+      },
+      {
+        "name": "Buass",
+        "x": 727.0,
+        "y": 371.0
+      },
+      {
+        "name": "Bike",
+        "x": 407.5,
+        "y": 557.0
+      },
+      {
+        "name": "Car",
+        "x": 361.5,
+        "y": 230.0
+      },
+      {
+        "name": "Vehicle",
+        "x": 863.5,
+        "y": 184.0
       }
     ]
   },
@@ -166,7 +202,6 @@
           "name": "c3",
           "className": "Bus"
         }
-
       ],
       "messages": [
         {
@@ -218,5 +253,3 @@
     }
   ]
 }
-
-

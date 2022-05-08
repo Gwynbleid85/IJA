@@ -21,7 +21,6 @@ import com.google.gson.GsonBuilder;
 public class UML {
     private UMLClassDiagram classDiagram;
     private List<UMLSequenceDiagram> sequenceDiagrams;
-    //private GUIClassDiagram classDiagram; todo
 
 
 

@@ -13,7 +13,7 @@ public class UMLClassDiagram {
 	private Set<UMLClass> classes;
 	private Set<UMLRelation> relations;
 
-	/* Position of classes to load and save from/to file */
+	/** Position of classes to load and save from/to file */
 	private Set<ClassPosition> classPositions;
 
 	public UMLClassDiagram(){

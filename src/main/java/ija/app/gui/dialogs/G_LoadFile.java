@@ -15,6 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * @author Milos Hegr (xhegrm00)
+ */
 public class G_LoadFile {
 	private Stage stage;
 	private G_UML parent;

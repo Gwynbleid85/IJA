@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * @author Milos Hegr (xhegrm00)
+ */
 public class G_EditUMLClassDialog {
 
 	private UMLClass umlClass;

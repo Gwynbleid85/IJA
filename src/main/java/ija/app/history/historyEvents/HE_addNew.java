@@ -5,6 +5,9 @@ import ija.app.history.HistoryEvent;
 
 import java.io.IOException;
 
+/**
+ * @author Milos Hegr (xhegrm00)
+ */
 public class HE_addNew implements HistoryEvent {
 	private HE_addAndDelete_T origin;
 	private G_selectable addNew;

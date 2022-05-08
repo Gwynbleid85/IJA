@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Random;
 
+/**
+ * @author Milos Hegr (xhegrm00)
+ * Class implements graphical representation of UMLClass
+ */
 public class G_UMLClass implements G_selectable, HE_move_T, HE_edit_T {
 	private G_UMLClassDiagram parent;
 	private UMLClass umlClass;
@@ -84,6 +88,11 @@ public class G_UMLClass implements G_selectable, HE_move_T, HE_edit_T {
 		});
 	}
 
+	/**
+	 * Move to given position
+	 * @param pos Position to move to
+	 * @throws IOException
+	 */
 	public void moveTo(G_Position pos) throws IOException {
 		History.addEvent(new HE_move(this, new G_Position(GumlClass.getLayoutX(), GumlClass.getLayoutY())));
 		GumlClass.setLayoutX(pos.x);

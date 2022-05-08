@@ -1,5 +1,9 @@
 package ija.app.gui;
 
+/*
+ * @author Milos Hegr (xhegrm00)
+ * Class represents basic position (x, y)
+ */
 public class G_Position {
 
 	public double x;

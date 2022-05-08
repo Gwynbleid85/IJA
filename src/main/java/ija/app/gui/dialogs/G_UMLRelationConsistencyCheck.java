@@ -15,6 +15,9 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * @author Milos Hegr (xhegrm00)
+ */
 public class G_UMLRelationConsistencyCheck {
 	private Stage stage;
 	private G_UMLClassDiagram diagram;

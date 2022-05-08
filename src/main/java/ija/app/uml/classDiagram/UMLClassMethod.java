@@ -31,34 +31,18 @@ public class UMLClassMethod {
 		accessMod = "";
 	}
 
-	/**
-	 * Getter of name attribute
-	 * @return name attribute of UMLClass object
-	 */
 	public String getName(){
 		return name;
 	}
 
-	/**
-	 * Setter of name attribute
-	 * @param name New value of name attribute of UMLClass object
-	 */
 	public void setName(String name){
 		this.name = name;
 	}
 
-	/**
-	 * Getter of AccessMod attribute
-	 * @return AccessMod attribute of UMLClass object
-	 */
 	public String getAccessMod(){
 		return accessMod;
 	}
 
-	/**
-	 * Setter of AccessMod attribute
-	 * @param accessMod New value of accessMod attribute of UMLClass object
-	 */
 	public void setAccessMod(String accessMod){
 		this.accessMod = accessMod;
 	}

@@ -10,5 +10,3 @@ Zpusob prekladu:
     'mvn install'
     Vygeneruje se jar soubor do slozky 'dest' a dokumentace do slozky 'doc'.
     Pro spusteni jar souboru se presuneme do slozky 'dest' a do terminalu zadame prikaz 'java -jar ija-app.jar'.
-Dalsi informace:
-    Jako demonstraci 3. ukolu jsme zvolili spusteni testu (junit) k metodam, ktere jsme implementovali.

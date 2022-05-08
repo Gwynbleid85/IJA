@@ -29,6 +29,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * @author Milos Hegr (xhegrm00)
+ * Class makes graphical representation of UMLClassDiagram
+ */
 public class G_UMLClassDiagram implements HE_addAndDelete_T {
 	/** UMLClassDiagram represented by this object */
 	private UMLClassDiagram diagram;
@@ -44,6 +48,8 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 	private Group root;
 	/** Scene of UMLClassDiagram */
 	private Scene classDiagramScene;
+	/** Was some G_UMLClass edited*/
+	public boolean wasEdited;
 
 	/**
 	 * Constructor of graphical representation of UMLCLassDiagram
@@ -55,6 +61,7 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 		this.diagram = diagram;
 		this.parent = parent;
 		selected = null;
+		wasEdited = false;
 		/* Prepare template */
 		root = new Group();
 		Group relationsGroup = new Group();
@@ -86,6 +93,9 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 		loadFilePositions();
 	}
 
+	/**
+	 * Method adds menu and its control to scene
+	 */
 	public void setMenu(){
 		((MenuBar)classDiagramScene.lookup("#MenuBar")).getMenus().clear();
 		/* Set file op buttons*/
@@ -145,6 +155,7 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 			asdf.add(s.getName());
 		ObservableList<String> seqDiagrams = FXCollections.observableArrayList(asdf);
 		((ComboBox<String>)classDiagramScene.lookup("#SetSeqDiagram")).setOnAction(e->{});
+		((ComboBox<String>)classDiagramScene.lookup("#SetSeqDiagram")).setItems(FXCollections.observableArrayList(""));
 		((ComboBox<String>)classDiagramScene.lookup("#SetSeqDiagram")).setItems(seqDiagrams);
 		((ComboBox<String>)classDiagramScene.lookup("#SetSeqDiagram")).promptTextProperty().set("Choose sequence diagram");
 		((ComboBox<String>)classDiagramScene.lookup("#SetSeqDiagram")).setOnAction( e -> {
@@ -167,6 +178,11 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 
 	}
 
+	/**
+	 * Methods add graphical representations to scene
+	 * @param stage Stage to be added to
+	 * @throws IOException
+	 */
 	public void draw(Stage stage) throws IOException {
 
 		/* Check consistency of relations */
@@ -190,6 +206,7 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 	 * @return scene of UMLClassDiagram representation
 	 */
 	public Scene getScene(){
+		setMenu();
 		return classDiagramScene;
 	}
 
@@ -250,7 +267,6 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 
 			/* Add new class*/
 			if(isChanged){
-				System.out.println("isChanged");
 				try {
 					addGUMLClass(new G_UMLClass(newClass, this));
 				} catch (IOException ex) {
@@ -283,6 +299,7 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 					((G_UMLClass)selected).loadCopy(toChange);
 					for(G_UMLClass c : classes)
 						c.update();
+					wasEdited = true;
 				}
 			}
 			else{
@@ -298,6 +315,13 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 					((G_UMLRelation)selected).loadCopy(toChange);
 					updateRelations();
 				}
+			}
+		});
+		/* Update relations when edited */
+		classDiagramScene.getRoot().setOnMouseMoved( e -> {
+			if(wasEdited){
+				wasEdited = false;
+				updateRelations();
 			}
 		});
 	}
@@ -472,6 +496,9 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 		} catch(Exception ignore){};
 	}
 
+	/**
+	 * Method adds ClassPositions to UML
+	 */
 	public void loadFilePositions() {
 		for(ClassPosition pos : diagram.getClassPositions()){
 			for(G_UMLClass gUmlClass : classes){
@@ -485,6 +512,10 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 		}
 	}
 
+
+	/**
+	 * Method moves G_UMLClasses to corresponding positions
+	 */
 	public void saveFilePositions(){
 		diagram.clearClassPositions();
 		for(G_UMLClass gUmlClass : classes){
