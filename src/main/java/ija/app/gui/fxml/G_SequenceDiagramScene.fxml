@@ -2,19 +2,18 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="762.0" prefWidth="1210.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button fx:id="newObject" layoutX="511.0" layoutY="726.0" mnemonicParsing="false" text="New object" />
-      <Button fx:id="newMessage" layoutX="674.0" layoutY="726.0" mnemonicParsing="false" text="New Message" />
-      <Button fx:id="Edit" layoutX="617.0" layoutY="726.0" mnemonicParsing="false" text="Edit" />
-      <Button fx:id="newReturnMessage" layoutX="794.0" layoutY="726.0" mnemonicParsing="false" text="New return message" />
-       <Button fx:id="Delete" layoutX="1139.0" layoutY="696.0" mnemonicParsing="false" text="Delete" AnchorPane.bottomAnchor="42.0" AnchorPane.rightAnchor="10.0" />
+      <Button fx:id="newInstance" layoutX="296.0" layoutY="694.0" mnemonicParsing="false" text="New object" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="305.0" />
+      <Button fx:id="newMessage" layoutX="907.0" layoutY="728.0" mnemonicParsing="false" text="New Message" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="180.0" />
+      <Button fx:id="Edit" layoutX="639.0" layoutY="684.0" mnemonicParsing="false" text="Edit" AnchorPane.bottomAnchor="42.0" AnchorPane.rightAnchor="100.0" />
+      <Button fx:id="newReturnMessage" layoutX="794.0" layoutY="726.0" mnemonicParsing="false" text="New return message" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+       <Button fx:id="Delete" layoutX="1135.0" layoutY="696.0" mnemonicParsing="false" text="Delete" AnchorPane.bottomAnchor="42.0" AnchorPane.rightAnchor="14.0" />
        <MenuBar fx:id="MenuBar" layoutX="10.0" layoutY="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <HBox alignment="CENTER" layoutX="525.0" layoutY="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>

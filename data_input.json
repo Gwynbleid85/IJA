@@ -156,7 +156,7 @@
       "instances": [
         {
           "name": "c1",
-          "className": "Car"
+          "className": "Random"
         },
         {
           "name": "c2",
@@ -170,20 +170,20 @@
       ],
       "messages": [
         {
-          "from": "c1:Car",
+          "from": "c1:Random",
           "to": "c2:Car",
           "message": "count",
-          "isReturn": true
+          "isReturn": false
         },
         {
-          "from": "c1:Car",
+          "from": "c1:Random",
           "to": "c2:Car",
           "message": "ride",
           "isReturn": false
         },
         {
-          "from": "c2:Car",
-          "to": "c3:Bus",
+          "from": "c3:Bus",
+          "to": "c2:Car",
           "message": "ride",
           "isReturn": true
         }

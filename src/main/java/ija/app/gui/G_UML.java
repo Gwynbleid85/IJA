@@ -81,7 +81,7 @@ public class G_UML {
 	public void draw() throws IOException {
 		classDiagram.draw(stage);
 		for (G_UMLSequenceDiagram gsd : sequenceDiagrams){
-			gsd.draw(stage);
+			gsd.draw();
 		}
 	}
 

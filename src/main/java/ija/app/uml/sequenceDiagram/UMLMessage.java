@@ -1,5 +1,6 @@
 package ija.app.uml.sequenceDiagram;
 
+import ija.app.uml.classDiagram.UMLClass;
 import ija.app.uml.classDiagram.UMLClassDiagram;
 
 /**
@@ -29,6 +30,14 @@ public class UMLMessage {
         this.from = from;
         this.to = to;
         this.message = message;
+    }
+
+    /**
+     * Simple constructor of UMLMessage
+     * @param classDiagram
+     */
+    public UMLMessage(UMLClassDiagram classDiagram){
+        this.classDiagram = classDiagram;
     }
 
     /**
@@ -82,6 +91,9 @@ public class UMLMessage {
         return isReturn;
     }
 
+    public void setIsReturn(boolean isReturn){
+        this.isReturn = isReturn;
+    }
 
     /**
      * Method which checks consistency of UMLMessage
@@ -131,5 +143,19 @@ public class UMLMessage {
      */
     public UMLSequenceDiagram getSequenceDiagram(){
         return sequenceDiagram;
+    }
+
+    /**
+     * Method which gets 'from' class of message
+     * @return from class
+     */
+    public String getClassFrom(){
+        String [] splitted = from.split(":");
+        return splitted[1];
+    }
+
+    public String getClassTo() {
+        String [] splitted = to.split(":");
+        return splitted[1];
     }
 }

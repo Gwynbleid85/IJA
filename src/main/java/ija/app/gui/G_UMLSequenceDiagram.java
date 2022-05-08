@@ -1,11 +1,12 @@
 package ija.app.gui;
 
 
-import ija.app.gui.dialogs.G_LoadFile;
-import ija.app.gui.dialogs.G_NewSeqDiagram;
+import ija.app.gui.dialogs.*;
 import ija.app.history.History;
 import ija.app.uml.UML;
-import ija.app.gui.dialogs.G_UMLInstanceDialog;
+import ija.app.uml.classDiagram.UMLClass;
+import ija.app.uml.classDiagram.UMLClassDiagram;
+import ija.app.uml.classDiagram.UMLClassMethod;
 import ija.app.uml.sequenceDiagram.UMLClassInstance;
 import ija.app.uml.sequenceDiagram.UMLMessage;
 import ija.app.uml.sequenceDiagram.UMLSequenceDiagram;
@@ -56,6 +57,7 @@ public class G_UMLSequenceDiagram {
         this.parent = parent;
         selected = null;
         root = new Group();
+        messages = new ArrayList<>();
 
         /* Create new Scene */
         AnchorPane template = FXMLLoader.load(getClass().getResource("fxml/G_SequenceDiagramScene.fxml"));
@@ -67,30 +69,9 @@ public class G_UMLSequenceDiagram {
         /* Create gui instances for the according diagram */
         instances = new ArrayList<>();
         for (UMLClassInstance inst : sd.getInstances()) {
-            G_UMLClassInstance gInst = new G_UMLClassInstance(inst, this); //todo
-            instances.add(gInst);
-            Node x = gInst.getNode();
-            x.setLayoutX(x.getLayoutX() + 100 + 200 * (instances.size() - 1));
-            root.getChildren().add(x);
-
-
+            addUMLInstance(inst, true);
         }
-    }
-
-    public void draw(Stage stage) throws IOException{
-        //todo consistency of messages
-
-        //create gui Messages for the according diagram
-        messages = new ArrayList<>();
-        for (UMLMessage m: diagram.getMessages()){
-            G_UMLMessage gm = new G_UMLMessage(m, this);
-            messages.add(gm);
-            messageOrder.add(gm); //for use of getting position
-            root.getChildren().add(gm.getNode());
-        }
-        setMenu();
         setEventHandlers();
-        updateMessages();
         positionLifelines();
         /*Resize the lifeLine when resizing the window size */
         parent.getStage().heightProperty().addListener((obs, oldVal, newVal) -> {
@@ -98,6 +79,69 @@ public class G_UMLSequenceDiagram {
         });
     }
 
+    /**
+     * Method which adds new GUIUMLInstance from existing umlInstance
+     * @param newInstance umlInstance to be used for GuiUMLInstance
+     * @param addingFromFile if already exists in UML and therefore shouldt be added into UML List
+     * @throws IOException
+     */
+    private void addUMLInstance(UMLClassInstance newInstance, boolean addingFromFile) throws IOException {
+        G_UMLClassInstance newGUMLInstance = new G_UMLClassInstance(newInstance, this);
+        instances.add(newGUMLInstance);
+
+        double offsetY;
+        if(!addingFromFile){
+            diagram.addInstance(newInstance);
+            offsetY = 0;
+        }
+        else {
+            offsetY = ((70 + 200 * (instances.size() - 1)));
+        }
+        Node x = newGUMLInstance.getNode();
+        x.setLayoutX(offsetY);
+        x.setLayoutY(50);
+        root.getChildren().add(x);
+    }
+
+
+    /**
+     * Method which adds new GUIUMLInstance from existing umlInstance
+     * @param newMessage umlInstance to be used for GuiUMLInstance
+     * @throws IOException
+     */
+    private void addUMLMessage(UMLMessage newMessage, boolean isReturn) throws IOException {
+        G_UMLMessage newGUMLMessage = new G_UMLMessage(newMessage, this);
+        messages.add(newGUMLMessage);
+        diagram.addMessage(newMessage);
+        newGUMLMessage.setPositionY((double) (300));
+        root.getChildren().add(newGUMLMessage.getNode());
+        root.getChildren().add(newGUMLMessage.getArrow());
+    }
+
+    /**
+     * Method which draws messages, needs to be called after showing instances
+     * @throws IOException
+     */
+    public void draw() throws IOException{
+        System.out.println("Drawing");
+        //create gui Messages for the according diagram
+        for (UMLMessage m: diagram.getMessages()){
+            G_UMLMessage gm = new G_UMLMessage(m, this);
+            messages.add(gm);
+            messageOrder.add(gm); //for use of getting position
+            gm.setPositionY((double) (110 + getMessageOrder(gm) * 50));
+            //add arrow
+            root.getChildren().add(gm.getArrow());
+            root.getChildren().add(gm.getNode());
+        }
+        setMenu();
+        updateMessages();
+        positionLifelines();
+    }
+
+    /**
+     * Method which positions lifelines to center of Instance
+     */
     public void positionLifelines(){
         for (G_UMLClassInstance gInst: instances){
             Line lifeLine = ((Line)gInst.getNode().lookup("#lifeLine"));
@@ -105,7 +149,6 @@ public class G_UMLSequenceDiagram {
             lifeLine.setEndX(((AnchorPane)gInst.getNode()).getWidth()/2);
             lifeLine.setEndY(getNode().getScene().getHeight() - 50);
         }
-
     }
 
 
@@ -194,7 +237,6 @@ public class G_UMLSequenceDiagram {
         /*If the canvas is selected (no element is selected) */
         sequenceDiagramScene.getRoot().setOnMouseClicked(e -> {
             if(e.isStillSincePress()){
-                System.out.println("Clear select"); //todo
                 if(selected != null)
                     selected.setSelect(false);
                 selected = null;
@@ -205,30 +247,99 @@ public class G_UMLSequenceDiagram {
 
 
         /* New Instance button*/
-        sequenceDiagramScene.getRoot().lookup("#newObject").setOnMouseClicked(e->{
+        sequenceDiagramScene.getRoot().lookup("#newInstance").setOnMouseClicked(e->{
             //create empty new Instance
+            System.out.println("Create new instance!");
+
             UMLClassInstance newInstance = new UMLClassInstance(parent.getUml().getClassDiagram());
             G_UMLInstanceDialog dialog = new G_UMLInstanceDialog(newInstance, this, true);
 
             /*Show the created dialog*/
+            boolean isChanged;
             try{
-                dialog.showDialog(parent.getStage());
+                isChanged = dialog.showDialog(parent.getStage());
             }catch(IOException ex){
                 throw new RuntimeException(ex);
             }
             //todo only if save button clicked!!!
             /*Add the prepared Instance*/
-            try{
-                addUMLInstance(newInstance);
+            if (isChanged){
+                try{
+                    addUMLInstance(newInstance, false);
+                }
+                catch (IOException ex){
+                    throw new RuntimeException(ex);
+                }
+                positionLifelines();
             }
-            catch (IOException ex){
-                throw new RuntimeException(ex);
+        });
+
+        /*New message button */
+        sequenceDiagramScene.getRoot().lookup("#newMessage").setOnMouseClicked(e->{
+            if(instances.size() != 0){
+                UMLMessage newMessage = new UMLMessage(parent.getUml().getClassDiagram());
+                newMessage.setIsReturn(false);
+                G_addMessageDialog dialog = new G_addMessageDialog(parent.getUml().getClassDiagram(), newMessage, this, false);
+                /*Show the created dialog*/
+                boolean isChanged;
+                try{
+                    isChanged = dialog.showDialog(parent.getStage());
+                }catch(IOException ex){
+                    throw new RuntimeException(ex);
+                }
+                /*Add the prepared Instance*/
+                if(isChanged){
+                    try{
+                        addUMLMessage(newMessage, false);
+                    }
+                    catch (IOException ex){
+                        throw new RuntimeException(ex);
+                    }
+                }
+                try {
+                    updateMessages();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
-            positionLifelines();
+
+        });
+
+
+        /*New return message button */
+        sequenceDiagramScene.getRoot().lookup("#newReturnMessage").setOnMouseClicked(e->{
+            if(instances.size() != 0){
+                UMLMessage newMessage = new UMLMessage(parent.getUml().getClassDiagram());
+                newMessage.setIsReturn(true);
+                G_addMessageDialog dialog = new G_addMessageDialog(parent.getUml().getClassDiagram(), newMessage, this, true);
+                /*Show the created dialog*/
+                boolean isChanged;
+                try{
+                    isChanged = dialog.showDialog(parent.getStage());
+                }catch(IOException ex){
+                    throw new RuntimeException(ex);
+                }
+                /*Add the prepared Instance*/
+                if(isChanged){
+                    try{
+                        addUMLMessage(newMessage, true);
+                    }
+                    catch (IOException ex){
+                        throw new RuntimeException(ex);
+                    }
+                }
+
+                try {
+                    updateMessages();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
         });
 
         /*Edit button */
         sequenceDiagramScene.getRoot().lookup("#Edit").setOnMouseClicked(e->{
+            /*Edit instance*/
             if(Objects.equals(selected.getType(), "UMLClassInstance")){
                 G_UMLClassInstance newInst = (G_UMLClassInstance)selected;
                 G_UMLInstanceDialog dialog = new G_UMLInstanceDialog(newInst.getUmlInstance(), this, false);
@@ -239,15 +350,31 @@ public class G_UMLSequenceDiagram {
                 }
                 newInst.updateText();
             }
+            /*Edit message */
             else if(Objects.equals(selected.getType(), "UMLMessage")){
-                //todo
+                /*If editing a return message */
+                if(((G_UMLMessage)selected).isReturnMessage()){
+                    G_UMLMessage mes = (G_UMLMessage)selected;
+                    G_editMessageDialog dialog = new G_editMessageDialog(parent.getUml().getClassDiagram(), mes.getUMLMessage(), this, true);
+                    try{
+                        dialog.showDialog(parent.getStage());
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    mes.updateText();
+                }
+                /*If editing a method message */
+                else {
+                    G_UMLMessage mes = (G_UMLMessage)selected;
+                    G_editMessageDialog dialog = new G_editMessageDialog(parent.getUml().getClassDiagram(), mes.getUMLMessage(), this, false);
+                    try{
+                        dialog.showDialog(parent.getStage());
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    mes.updateText();
+                }
             }
-
-            else if(Objects.equals(selected.getType(), "UMLReturnMessage")){
-                //todo
-            }
-
-
         });
 
         /* Delete button */
@@ -257,13 +384,11 @@ public class G_UMLSequenceDiagram {
                 if(Objects.equals(selected.getType(), "UMLClassInstance")){
                     deleteUMLInstance((G_UMLClassInstance)selected);
                 }
-                //todo else
-
-
+                if(Objects.equals(selected.getType(), "UMLMessage")){
+                    deleteUMLMessage((G_UMLMessage) selected);
+                }
             }
         });
-
-        //TODO: newMessage button
 
 
     }
@@ -294,6 +419,7 @@ public class G_UMLSequenceDiagram {
                 it.remove(); //remove from GUI
                 UMLMessage umlToDelete = guiMessage.getUMLMessage();
                 diagram.removeMessage(umlToDelete); //remove from UML
+                ((Group)getNode()).getChildren().remove(guiMessage.getArrow());//remove arrow from Scene
                 ((Group)getNode()).getChildren().remove(guiMessage.getNode()); //remove from Scene
             }
         }
@@ -308,21 +434,11 @@ public class G_UMLSequenceDiagram {
         UMLMessage umlToDelete = guiToDelete.getUMLMessage();
         diagram.removeMessage(umlToDelete);
         messages.remove(guiToDelete);
+        ((Group)getNode()).getChildren().remove(guiToDelete.getArrow());//remove arrow from Scene
         ((Group)getNode()).getChildren().remove(guiToDelete.getNode());
     }
 
-    /**
-     * Method which adds new GUIUMLInstance from existing umlInstance
-     * @param newInstance umlInstance to be used for GuiUMLInstance
-     * @throws IOException
-     */
-    private void addUMLInstance(UMLClassInstance newInstance) throws IOException {
-        G_UMLClassInstance newGUMLInstance = new G_UMLClassInstance(newInstance, this);
-        diagram.addInstance(newInstance);
-        instances.add(newGUMLInstance);
-        root.getChildren().add(newGUMLInstance.getNode());
 
-    }
 
 
 
@@ -418,11 +534,124 @@ public class G_UMLSequenceDiagram {
      * @return scene
      */
     public Scene getScene(){
-        //todo zavolat metodu na konzistenci
+        checkConsistency();
         return sequenceDiagramScene;
     }
 
-    //todo vola se vzdy, kdy se vola getscene
-    //kontrola, zda vsechno sedi s classdiagramem, ostatni obarvit cervene
+    public void checkConsistency(){
+        UMLClassDiagram classDiagram = parent.getUml().getClassDiagram();
+        Set<UMLClass> classes = classDiagram.getClasses();
+        //check Instances
+        checkInstancesConsistency(classes);
+        //check messages 'from' and 'to'
+        //checkMessageToFromConsistency(classes); todo
+        //check messages text
+        checkMessageConsistency(classes, classDiagram);
+    }
+    public void checkInstancesConsistency(Set<UMLClass> classes){
+        boolean consistent;
+        //check instances (existing class)
+        for (G_UMLClassInstance guiInstance: instances){
+            consistent = false;
+            for (UMLClass classToCompare: classes){
+                if(Objects.equals(classToCompare.getName(), guiInstance.getUmlInstance().getClassName())){
+                    guiInstance.setIsConsistent(true);
+                    consistent = true;
+                    break;
+                }
+            }
+            if(!consistent){
+                guiInstance.setIsConsistent(false);
+                //style elements
+                guiInstance.getNode().lookup("#instanceLabel").setStyle( "-fx-text-fill: red; -fx-background-color : white; -fx-border-color : red; -fx-border-width : 1 ;");
+                guiInstance.getNode().lookup("#lifeLine").setStyle("-fx-stroke: red; -fx-stroke-width: 1; -fx-stroke-dash-array: 10");
+            }
+        }
+    }
+
+    public void checkMessageToFromConsistency(Set<UMLClass> classes){
+        boolean fromConsistent, toConsistent;
+        //check messages(existing classes)
+        for (G_UMLMessage guiMessage: messages){
+            fromConsistent = false;
+            toConsistent = false;
+            for (UMLClass classToCompare: classes){
+                if(Objects.equals(classToCompare.getName(), guiMessage.getUMLMessage().getClassFrom())){
+                    fromConsistent = true;
+                }
+                if(Objects.equals(classToCompare.getName(), guiMessage.getUMLMessage().getClassTo())){
+                    toConsistent = true;
+                }
+            }
+            if(fromConsistent && toConsistent){ //if from or to Class doesnt match
+                guiMessage.setIsConsistent(true);
+            }
+            else {
+                guiMessage.setIsConsistent(false);
+                //style elements
+                if (guiMessage.getIsLeftarrow()){
+                    guiMessage.getArrow().lookup("#leftArrowUp").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
+                    guiMessage.getArrow().lookup("#leftArrowDown").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
+                }else{
+                    guiMessage.getArrow().lookup("#rightArrowUp").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
+                    guiMessage.getArrow().lookup("#rightArrowDown").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
+                }
+                guiMessage.getNode().lookup("#messageLabel").setStyle("-fx-text-fill: red; -fx-font-weight: regular;");
+
+                if(guiMessage.isReturnMessage())
+                    guiMessage.getNode().lookup("#messageLine").setStyle("-fx-stroke: red; -fx-stroke-width : 1; -fx-stroke-dash-array: 10;");
+                else
+                    guiMessage.getNode().lookup("#messageLine").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
+            }
+        }
+    }
+
+    public void checkMessageConsistency(Set<UMLClass> classes, UMLClassDiagram classDiagram){
+        boolean isConsistent;
+        for (G_UMLMessage guiMessage: messages){
+            isConsistent = false;
+            //check only if is not a return message
+            if(!guiMessage.isReturnMessage()){
+                List<UMLClassMethod> ownMethods= classDiagram.getUMLClassOwnMethods(guiMessage.getUMLMessage().getClassTo());
+                List<UMLClassMethod> inheritedMethods = classDiagram.getUMLClassInheritedMethods(guiMessage.getUMLMessage().getClassTo());
+                if(inheritedMethods == null){
+                    inheritedMethods = new ArrayList<>();
+                }
+                List<UMLClassMethod> allMethods = new ArrayList<>();
+                allMethods.addAll(ownMethods);
+                allMethods.addAll(inheritedMethods);
+                //check if the message corresponds to a method in 'To' class
+                for(UMLClassMethod method: allMethods){
+                    if(Objects.equals(guiMessage.getUMLMessage().getMessage(), method.getName())){
+                        guiMessage.setIsConsistent(true);
+                        isConsistent = true;
+                        break;
+                    }
+                }
+                //if is not consistent, then set styling
+                if(!isConsistent){
+                    guiMessage.setIsConsistent(false);
+                    //style elements
+                    if (guiMessage.getIsLeftarrow()){
+                        guiMessage.getArrow().lookup("#leftArrowUp").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
+                        guiMessage.getArrow().lookup("#leftArrowDown").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
+                    }else{
+                        guiMessage.getArrow().lookup("#rightArrowUp").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
+                        guiMessage.getArrow().lookup("#rightArrowDown").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
+                    }
+                    guiMessage.getNode().lookup("#messageLabel").setStyle("-fx-text-fill: red; -fx-font-weight: regular;");
+
+                    if(guiMessage.isReturnMessage())
+                        guiMessage.getNode().lookup("#messageLine").setStyle("-fx-stroke: red; -fx-stroke-width : 1; -fx-stroke-dash-array: 10;");
+                    else
+                        guiMessage.getNode().lookup("#messageLine").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
+                }
+            }
+            //if is a return message
+            else{
+                guiMessage.setIsConsistent(true);
+            }
+        }
+    }
 }
 

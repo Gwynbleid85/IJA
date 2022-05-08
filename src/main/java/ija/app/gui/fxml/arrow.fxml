@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Line fx:id="leftArrowUp" endX="15.0" startY="10.0" visible="false" />
+      <Line fx:id="leftArrowDown" endX="15.0" endY="20.0" startY="10.0" visible="false" />
+      <Line fx:id="rightArrowUp" endX="15.0" endY="10.0" visible="false" />
+      <Line fx:id="rightArrowDown" endX="15.0" endY="10.0" startY="20.0" visible="false" />
+   </children>
+</AnchorPane>

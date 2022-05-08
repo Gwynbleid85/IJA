@@ -30,6 +30,7 @@ public class G_UMLInstanceDialog {
     /** True if creating new Isntance, false if editing instance*/
     private boolean creatingNew;
     /**Signalize change when editing */
+    private boolean isChanged;
 
 
     /**
@@ -41,6 +42,7 @@ public class G_UMLInstanceDialog {
         umlInstance = newInstance;
         this.sequenceDiagram = sd;
         this.creatingNew = creatingNew;
+        this.isChanged = false;
     }
 
     /**
@@ -60,7 +62,7 @@ public class G_UMLInstanceDialog {
 
         setEventHandlers();
 
-        //if creating new class
+        //if creating new Instance
         if(creatingNew){
             ((TextField)template.lookup("#instanceName")).setText("new"); //set instance name for the first usage
             Set<UMLClass> allClasses =  umlInstance.getClassDiagram().getClasses();
@@ -84,13 +86,14 @@ public class G_UMLInstanceDialog {
      * @return true if class was changed
      * @throws IOException
      */
-    public void showDialog(Stage parent) throws IOException {
+    public boolean showDialog(Stage parent) throws IOException {
         Stage stage = new Stage();
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(parent);
         stage.setScene(createScene());
         this.stage = stage;
         stage.showAndWait();
+        return isChanged;
     }
 
     /**
@@ -152,6 +155,7 @@ public class G_UMLInstanceDialog {
                 if(creatingNew){
                     if(checkData()) { //check if the inputed data is valid
                         saveData();
+                        isChanged = true;
                         stage.close();
                     }
                 }

@@ -12,6 +12,7 @@ import java.io.IOException;
 public class G_UMLClassInstance implements G_selectable{
     private G_UMLSequenceDiagram parent;
     private UMLClassInstance umlInstance;
+    private boolean isConsistent;
     private AnchorPane GumlInstance;
 
     /**
@@ -63,20 +64,18 @@ public class G_UMLClassInstance implements G_selectable{
     public void updateText(){
         //update instance name
         ((Label)GumlInstance.lookup("#instanceLabel")).setText(umlInstance.getId());
-        //update messages
-
     }
 
 
 
     /**
-     * Method which gets position of the Instance //todo y axis, at start x axis not counting
+     * Method which gets position of the Instance
      * @param m
      * @return
      */
     public G_Position getPos(G_UMLMessage m){
 
-        return new G_Position(GumlInstance.getLayoutX() + GumlInstance.getWidth()/2, 100+ GumlInstance.getLayoutY() + parent.getMessageOrder(m) * 50);
+        return new G_Position(GumlInstance.getLayoutX() + GumlInstance.getWidth()/2, m.getPositionY());
 
     }
 
@@ -110,9 +109,15 @@ public class G_UMLClassInstance implements G_selectable{
 
         }
         else{
-            GumlInstance.lookup("#instanceLabel").setStyle( "-fx-background-color : white; -fx-border-color : black;" +
-                    " -fx-border-width : 1 ;");
-            GumlInstance.lookup("#lifeLine").setStyle("-fx-stroke-width: 1; -fx-stroke-dash-array: 10");
+            if(isConsistent){
+                GumlInstance.lookup("#instanceLabel").setStyle( "-fx-background-color : white; -fx-border-color : black;" +
+                        " -fx-border-width : 1 ;");
+                GumlInstance.lookup("#lifeLine").setStyle("-fx-stroke-width: 1; -fx-stroke-dash-array: 10");
+            }
+            else {
+                GumlInstance.lookup("#instanceLabel").setStyle( "-fx-text-fill: red; -fx-background-color : white; -fx-border-color : red; -fx-border-width : 1 ;");
+                GumlInstance.lookup("#lifeLine").setStyle("-fx-stroke: red; -fx-stroke-width: 1; -fx-stroke-dash-array: 10");
+            }
         }
     }
 
@@ -128,5 +133,13 @@ public class G_UMLClassInstance implements G_selectable{
 
     public UMLClassInstance getUmlInstance(){
        return umlInstance;
+    }
+
+    public boolean getisConsistent() {
+        return isConsistent;
+    }
+
+    public void setIsConsistent(boolean consistent) {
+        isConsistent = consistent;
     }
 }
