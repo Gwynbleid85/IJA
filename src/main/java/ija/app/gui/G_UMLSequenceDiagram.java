@@ -28,6 +28,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * @author Jiri Mladek (xmlade01)
+ * Class representing GUI UML_SequenceDiagram
+ */
 public class G_UMLSequenceDiagram {
     private UMLSequenceDiagram diagram;
     private G_UML parent;

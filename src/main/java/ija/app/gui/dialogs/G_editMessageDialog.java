@@ -19,6 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
+/**
+ * @author Jiri Mladek (xmlade01)
+ * Class representing GUI dialog for editing messsages
+ */
 public class G_editMessageDialog {
     private UMLClassDiagram classDiagram;
     private UMLMessage umlMessage;

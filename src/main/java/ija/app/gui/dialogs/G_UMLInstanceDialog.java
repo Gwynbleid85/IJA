@@ -21,6 +21,10 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * @author Jiri Mladek (xmlade01)
+ * Class representing GUI dialog for adding and creating Instance
+ */
 public class G_UMLInstanceDialog {
 
     private UMLClassInstance umlInstance;

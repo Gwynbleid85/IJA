@@ -9,6 +9,10 @@ import javafx.scene.shape.Line;
 
 import java.io.IOException;
 
+/**
+ * @author Jiri Mladek (xmlade01)
+ * Class representing GUI UML_Message
+ */
 public class G_UMLMessage implements G_selectable{
     private UMLMessage message;
     private G_UMLSequenceDiagram parent;
