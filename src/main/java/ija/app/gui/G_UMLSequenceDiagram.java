@@ -73,7 +73,7 @@ public class G_UMLSequenceDiagram {
         /* Create gui instances for the according diagram */
         instances = new ArrayList<>();
         for (UMLClassInstance inst : sd.getInstances()) {
-            addUMLInstance(inst, true);
+            addUMLInstance(inst, true, false);
         }
         setEventHandlers();
         positionLifelines();
@@ -89,8 +89,12 @@ public class G_UMLSequenceDiagram {
      * @param addingFromFile if already exists in UML and therefore shouldt be added into UML List
      * @throws IOException
      */
-    private void addUMLInstance(UMLClassInstance newInstance, boolean addingFromFile) throws IOException {
+    private void addUMLInstance(UMLClassInstance newInstance, boolean addingFromFile, boolean alwaysConsistent) throws IOException {
         G_UMLClassInstance newGUMLInstance = new G_UMLClassInstance(newInstance, this);
+        //when user adds new instance himself, instance is always consistent
+        if(alwaysConsistent){
+            newGUMLInstance.setIsConsistent(true);
+        }
         instances.add(newGUMLInstance);
 
         double offsetY;
@@ -113,8 +117,11 @@ public class G_UMLSequenceDiagram {
      * @param newMessage umlInstance to be used for GuiUMLInstance
      * @throws IOException
      */
-    private void addUMLMessage(UMLMessage newMessage, boolean isReturn) throws IOException {
+    private void addUMLMessage(UMLMessage newMessage, boolean isReturn, boolean alwaysConsistent) throws IOException {
         G_UMLMessage newGUMLMessage = new G_UMLMessage(newMessage, this);
+        if(alwaysConsistent){
+            newGUMLMessage.setIsConsistent(true);
+        }
         messages.add(newGUMLMessage);
         diagram.addMessage(newMessage);
         newGUMLMessage.setPositionY((double) (300));
@@ -269,7 +276,7 @@ public class G_UMLSequenceDiagram {
             /*Add the prepared Instance*/
             if (isChanged){
                 try{
-                    addUMLInstance(newInstance, false);
+                    addUMLInstance(newInstance, false, true);
                 }
                 catch (IOException ex){
                     throw new RuntimeException(ex);
@@ -291,10 +298,10 @@ public class G_UMLSequenceDiagram {
                 }catch(IOException ex){
                     throw new RuntimeException(ex);
                 }
-                /*Add the prepared Instance*/
+                /*Add the prepared Message*/
                 if(isChanged){
                     try{
-                        addUMLMessage(newMessage, false);
+                        addUMLMessage(newMessage, false, true);
                     }
                     catch (IOException ex){
                         throw new RuntimeException(ex);
@@ -326,7 +333,7 @@ public class G_UMLSequenceDiagram {
                 /*Add the prepared Instance*/
                 if(isChanged){
                     try{
-                        addUMLMessage(newMessage, true);
+                        addUMLMessage(newMessage, true, true);
                     }
                     catch (IOException ex){
                         throw new RuntimeException(ex);
@@ -600,7 +607,7 @@ public class G_UMLSequenceDiagram {
                     guiMessage.getArrow().lookup("#rightArrowUp").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
                     guiMessage.getArrow().lookup("#rightArrowDown").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
                 }
-                guiMessage.getNode().lookup("#messageLabel").setStyle("-fx-text-fill: red; -fx-font-weight: regular;");
+                guiMessage.getNode().lookup("#messageLabel").setStyle("-fx-text-fill: red; -fx-font-weight: normal;");
 
                 if(guiMessage.isReturnMessage())
                     guiMessage.getNode().lookup("#messageLine").setStyle("-fx-stroke: red; -fx-stroke-width : 1; -fx-stroke-dash-array: 10;");
@@ -643,7 +650,7 @@ public class G_UMLSequenceDiagram {
                         guiMessage.getArrow().lookup("#rightArrowUp").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
                         guiMessage.getArrow().lookup("#rightArrowDown").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
                     }
-                    guiMessage.getNode().lookup("#messageLabel").setStyle("-fx-text-fill: red; -fx-font-weight: regular;");
+                    guiMessage.getNode().lookup("#messageLabel").setStyle("-fx-text-fill: red; -fx-font-weight: normal;");
 
                     if(guiMessage.isReturnMessage())
                         guiMessage.getNode().lookup("#messageLine").setStyle("-fx-stroke: red; -fx-stroke-width : 1; -fx-stroke-dash-array: 10;");
