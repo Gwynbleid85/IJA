@@ -93,9 +93,14 @@ public class UMLRelation{
 	 */
 	public boolean consistencyCheck(Set<UMLClass> classes) {
 		/*Check if to class exists*/
-		if( ! classes.contains(new UMLClass(to)))
-			return false;
-		/*Check if all from classes exists*/
-		return classes.contains(new UMLClass(from));
+		boolean toFound = false;
+		boolean fromFound = false;
+		for(UMLClass c :classes){
+			if(Objects.equals(c.getName(), to))
+				toFound = true;
+			if(Objects.equals(c.getName(), from))
+				fromFound = true;
+		}
+		return toFound && fromFound;
 	}
 }

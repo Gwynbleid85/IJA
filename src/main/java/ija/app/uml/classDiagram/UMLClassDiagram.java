@@ -33,7 +33,19 @@ public class UMLClassDiagram {
 
 	public boolean delClass(String className){
 		clearRelations(className);
-		return this.classes.remove(new UMLClass(className));
+		for(UMLClass c : classes){
+			System.out.println("Name2: " + c.getName());
+			System.out.println("Contains2: " + classes.contains(c));
+		}
+
+
+		System.out.println("Trying to delete class: " + getClassByName(className).getName());
+		System.out.println("Contains: " + classes.contains(getClassByName(className)));
+		for(UMLClass c : classes)
+			System.out.println("Classes: " + c.getName());
+
+		return classes.remove(getClassByName(className));
+
 	}
 	/**
 	 * Method to get Set of all UMLClass objects in UMLClassDiagram
@@ -73,9 +85,9 @@ public class UMLClassDiagram {
 	 * @return null if UMLClass not found, List of UMLMethods otherwise
 	 */
 	public List<UMLClassMethod> getUMLClassOwnMethods(String className){
-		if(! classes.contains(new UMLClass(className)))
-			return new ArrayList<>();
-		return findClassByName(className).getMethods();
+		if(getClassByName(className) != null)
+			return getClassByName(className).getMethods();
+		return new ArrayList<>();
 	}
 
 	/**
@@ -84,15 +96,15 @@ public class UMLClassDiagram {
 	 * @return null if UMLClass not found, List of inherited UMLMethods otherwise
 	 */
 	public List<UMLClassMethod> getUMLClassInheritedMethods(String className){
-		if(! classes.contains(new UMLClass(className)))
+		if(getClassByName(className) == null)
 			return null;
-		UMLClass c = findClassByName(className);
+		UMLClass c = getClassByName(className);
 		List<UMLClassMethod> list = new ArrayList<>();
 		/* Got through all relations and find all classes that class c is inheriting from*/
 		for(UMLRelation r : relations){
 			if(Objects.equals(r.getFrom(), c.getName()) && Objects.equals(r.getType(), "Generalization"))
 				/* Call helper method to get deeper inheritance*/
-				list.addAll(new LinkedList<>(getUMLClassInheritedMethodsHelper(findClassByName(r.getTo()))));
+				list.addAll(new LinkedList<>(getUMLClassInheritedMethodsHelper(getClassByName(r.getTo()))));
 		}
 		return list;
 	}
@@ -109,7 +121,7 @@ public class UMLClassDiagram {
 		for(UMLRelation r : relations){
 			if(Objects.equals(r.getFrom(), c.getName()) && Objects.equals(r.getType(), "Generalization"))
 				/* Recursively call this method */
-				list.addAll(new LinkedList<>(getUMLClassInheritedMethodsHelper(findClassByName(r.getTo()))));
+				list.addAll(new LinkedList<>(getUMLClassInheritedMethodsHelper(getClassByName(r.getTo()))));
 		}
 		return list;
 	}
@@ -119,12 +131,12 @@ public class UMLClassDiagram {
 	 * @param name Name of wanted UMLClass object
 	 * @return tmp UMLClass object with name "not found" if not found, wanted UMLClass object otherwise
 	 */
-	private UMLClass findClassByName(String name){
+	public UMLClass getClassByName(String name){
 		for (UMLClass c : classes) {
-			if ( c.equals(new UMLClass(name)))
+			if (Objects.equals(c.getName(), name))
 				return c ;
 		}
-		return new UMLClass("not found");
+		return null;
 	}
 
 	public Set<ClassPosition> getClassPositions(){

@@ -154,11 +154,12 @@ public class G_UMLClass implements G_selectable, HE_move_T, HE_edit_T {
 		for(UMLClassMethod a : umlClass.getMethods()){
 			Label met = new Label(a.toString());
 			/* Add @Override tag when method inherited */
-			for(UMLClassMethod inheritedMethod : parent.getDiagram().getUMLClassInheritedMethods(getName())){
-				if(Objects.equals(inheritedMethod.getName(), a.getName())){
-					met.setText(met.getText() + " @Override");
+			if(parent.getDiagram().getUMLClassInheritedMethods(getName()) != null)
+				for(UMLClassMethod inheritedMethod : parent.getDiagram().getUMLClassInheritedMethods(getName())){
+					if(Objects.equals(inheritedMethod.getName(), a.getName())){
+						met.setText(met.getText() + " @Override");
+					}
 				}
-			}
 			methods.getChildren().add(met);
 		}
 	}

@@ -7,6 +7,7 @@ import ija.app.uml.UML;
 import ija.app.uml.classDiagram.UMLClass;
 import ija.app.uml.classDiagram.UMLClassDiagram;
 import ija.app.uml.classDiagram.UMLClassMethod;
+import ija.app.uml.classDiagram.UMLRelation;
 import ija.app.uml.sequenceDiagram.UMLClassInstance;
 import ija.app.uml.sequenceDiagram.UMLMessage;
 import ija.app.uml.sequenceDiagram.UMLSequenceDiagram;
@@ -45,7 +46,7 @@ public class G_UMLSequenceDiagram {
     private G_selectable selected;
     /** Main node of Graphical Sequence diagram*/
     private Group root;
-
+    private boolean edited;
 
 
     /**
@@ -62,6 +63,7 @@ public class G_UMLSequenceDiagram {
         selected = null;
         root = new Group();
         messages = new ArrayList<>();
+        edited = true;
 
         /* Create new Scene */
         AnchorPane template = FXMLLoader.load(getClass().getResource("fxml/G_SequenceDiagramScene.fxml"));
@@ -360,6 +362,7 @@ public class G_UMLSequenceDiagram {
                     throw new RuntimeException(ex);
                 }
                 newInst.updateText();
+                edited = true;
             }
             /*Edit message */
             else if(Objects.equals(selected.getType(), "UMLMessage")){
@@ -373,6 +376,7 @@ public class G_UMLSequenceDiagram {
                         throw new RuntimeException(ex);
                     }
                     mes.updateText();
+                    edited = true;
                 }
                 /*If editing a method message */
                 else {
@@ -384,7 +388,17 @@ public class G_UMLSequenceDiagram {
                         throw new RuntimeException(ex);
                     }
                     mes.updateText();
+                    edited = true;
                 }
+            }
+        });
+        sequenceDiagramScene.setOnMouseMoved( e ->{
+            if(edited){
+                edited = false;
+                try {
+                    updateMessages();
+                } catch (Exception ignored) {}
+                positionLifelines();
             }
         });
 
@@ -459,6 +473,7 @@ public class G_UMLSequenceDiagram {
      * @throws IOException
      */
     public void updateMessages() throws IOException{
+        checkConsistency();
         for (G_UMLMessage m: messages)
             m.updatePosition();
     }
@@ -546,6 +561,10 @@ public class G_UMLSequenceDiagram {
      */
     public Scene getScene(){
         checkConsistency();
+        try{
+            updateMessages();
+        }catch(Exception e){};
+        edited = true;
         return sequenceDiagramScene;
     }
 
@@ -554,8 +573,6 @@ public class G_UMLSequenceDiagram {
         Set<UMLClass> classes = classDiagram.getClasses();
         //check Instances
         checkInstancesConsistency(classes);
-        //check messages 'from' and 'to'
-        //checkMessageToFromConsistency(classes); todo
         //check messages text
         checkMessageConsistency(classes, classDiagram);
     }
@@ -577,42 +594,9 @@ public class G_UMLSequenceDiagram {
                 guiInstance.getNode().lookup("#instanceLabel").setStyle( "-fx-text-fill: red; -fx-background-color : white; -fx-border-color : red; -fx-border-width : 1 ;");
                 guiInstance.getNode().lookup("#lifeLine").setStyle("-fx-stroke: red; -fx-stroke-width: 1; -fx-stroke-dash-array: 10");
             }
-        }
-    }
-
-    public void checkMessageToFromConsistency(Set<UMLClass> classes){
-        boolean fromConsistent, toConsistent;
-        //check messages(existing classes)
-        for (G_UMLMessage guiMessage: messages){
-            fromConsistent = false;
-            toConsistent = false;
-            for (UMLClass classToCompare: classes){
-                if(Objects.equals(classToCompare.getName(), guiMessage.getUMLMessage().getClassFrom())){
-                    fromConsistent = true;
-                }
-                if(Objects.equals(classToCompare.getName(), guiMessage.getUMLMessage().getClassTo())){
-                    toConsistent = true;
-                }
-            }
-            if(fromConsistent && toConsistent){ //if from or to Class doesnt match
-                guiMessage.setIsConsistent(true);
-            }
-            else {
-                guiMessage.setIsConsistent(false);
-                //style elements
-                if (guiMessage.getIsLeftarrow()){
-                    guiMessage.getArrow().lookup("#leftArrowUp").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
-                    guiMessage.getArrow().lookup("#leftArrowDown").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
-                }else{
-                    guiMessage.getArrow().lookup("#rightArrowUp").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
-                    guiMessage.getArrow().lookup("#rightArrowDown").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
-                }
-                guiMessage.getNode().lookup("#messageLabel").setStyle("-fx-text-fill: red; -fx-font-weight: normal;");
-
-                if(guiMessage.isReturnMessage())
-                    guiMessage.getNode().lookup("#messageLine").setStyle("-fx-stroke: red; -fx-stroke-width : 1; -fx-stroke-dash-array: 10;");
-                else
-                    guiMessage.getNode().lookup("#messageLine").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
+            else{
+                guiInstance.getNode().lookup("#instanceLabel").setStyle( "-fx-text-fill: black; -fx-background-color : white; -fx-border-color : black; -fx-border-width : 1 ;");
+                guiInstance.getNode().lookup("#lifeLine").setStyle("-fx-stroke: black; -fx-stroke-width: 1; -fx-stroke-dash-array: 10");
             }
         }
     }
@@ -657,10 +641,46 @@ public class G_UMLSequenceDiagram {
                     else
                         guiMessage.getNode().lookup("#messageLine").setStyle("-fx-stroke: red; -fx-stroke-width : 1;");
                 }
+                else{
+                    if (guiMessage.getIsLeftarrow()){
+                        guiMessage.getArrow().lookup("#leftArrowUp").setStyle("-fx-stroke: black; -fx-stroke-width : 1;");
+                        guiMessage.getArrow().lookup("#leftArrowDown").setStyle("-fx-stroke: black; -fx-stroke-width : 1;");
+                    }else{
+                        guiMessage.getArrow().lookup("#rightArrowUp").setStyle("-fx-stroke: black; -fx-stroke-width : 1;");
+                        guiMessage.getArrow().lookup("#rightArrowDown").setStyle("-fx-stroke: black; -fx-stroke-width : 1;");
+                    }
+                    guiMessage.getNode().lookup("#messageLabel").setStyle("-fx-text-fill: black; -fx-font-weight: normal;");
+
+                    if(guiMessage.isReturnMessage())
+                        guiMessage.getNode().lookup("#messageLine").setStyle("-fx-stroke: black; -fx-stroke-width : 1; -fx-stroke-dash-array: 10;");
+                    else
+                        guiMessage.getNode().lookup("#messageLine").setStyle("-fx-stroke: black; -fx-stroke-width : 1;");
+                }
             }
             //if is a return message
             else{
                 guiMessage.setIsConsistent(true);
+            }
+        }
+    }
+
+    public void updatedClassName(String oldName, String newName) throws IOException {
+        /* Update instances */
+        for(G_UMLClassInstance instance : instances){
+            if(Objects.equals(instance.getUmlInstance().getClassName(), oldName)){
+                instance.getUmlInstance().setClassName(newName);
+                instance.updateText();
+            }
+        }
+        /* Update messages */
+        for(G_UMLMessage message : messages){
+            if(Objects.equals(message.getUMLMessage().getClassTo(), oldName)){
+                message.getUMLMessage().setClassTo(newName);
+                message.updatePosition();
+            }
+            if(Objects.equals(message.getUMLMessage().getClassFrom(), oldName)){
+                message.getUMLMessage().setClassFrom(newName);
+                message.updatePosition();
             }
         }
     }

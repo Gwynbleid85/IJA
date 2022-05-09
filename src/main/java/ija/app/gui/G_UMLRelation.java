@@ -81,10 +81,33 @@ public class G_UMLRelation implements G_selectable, HE_edit_T {
 			tan2 = Math.tan(Math.toRadians(360 - angle + 90));
 		else
 			tan2 = Math.tan(Math.toRadians(angle+90));
-		G_Position intersection = new G_Position(
-				/* X */ 	Math.min(Math.max(to.x + (toBorder.y/2)/ tan, to.x - toBorder.x/2), to.x + toBorder.x/2),
-				/* Y */ 	Math.min(Math.max(to.y + (toBorder.x/2)/ tan2, to.y - toBorder.y/2), to.y + toBorder.y/2)
-		);
+		G_Position intersection = new G_Position();
+		/* 90 */
+		if(angle > 89.9 && angle < 90.1){
+			intersection.x = to.x;
+			intersection.y = to.y + toBorder.y/2;
+		}
+		/* 180 */
+		else if(angle > 179.9 && angle < 180.1){
+			intersection.x = to.x - toBorder.x/2;
+			intersection.y = to.y;
+		}
+		/* 270 */
+		else if(angle > 269.9 && angle < 270.1){
+			intersection.x = to.x;
+			intersection.y = to.y - toBorder.y/2;
+		}
+		/* 0/360*/
+		else if(angle > 359.9 || angle < 0.1){
+			intersection.x = to.x - toBorder.x/2;
+			intersection.y = to.y;
+		}
+		else{
+			/* X */
+			intersection.x = Math.min(Math.max(to.x + (toBorder.y/2)/ tan, to.x - toBorder.x/2), to.x + toBorder.x/2);
+			/* Y */
+			intersection.y = Math.min(Math.max(to.y + (toBorder.x/2)/ tan2, to.y - toBorder.y/2), to.y + toBorder.y/2);
+		}
 		/* Create relation line */
 		Line line = new Line();
 		line.setId("Line");

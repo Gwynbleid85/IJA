@@ -29,12 +29,12 @@ public class G_UMLRelationConsistencyCheck {
 	public boolean checkConsistency(UMLRelation relation)  throws IOException {
 		if(!relation.consistencyCheck(diagram.getClasses())){
 			/* Check to */
-			if(!diagram.getClasses().contains(new UMLClass(relation.getTo()))){
+			if(!diagram.getClasses().contains(diagram.getDiagram().getClassByName(relation.getTo()))){
 				if(consistencyFixPopup(relation.getName(), relation.getTo()))
 					return false;
 			}
 			/* Check from */
-			if(!diagram.getClasses().contains(new UMLClass(relation.getFrom()))){
+			if(!diagram.getClasses().contains(diagram.getDiagram().getClassByName(relation.getFrom()))){
 				if(consistencyFixPopup(relation.getName(), relation.getFrom()))
 					return false;
 			}

@@ -132,4 +132,10 @@ public class G_UML {
 		stage.setScene(getMainScene());
 		draw();
 	}
+
+	public void updatedClassName(String oldName, String newName) throws IOException {
+		for(G_UMLSequenceDiagram diagram : sequenceDiagrams){
+			diagram.updatedClassName(oldName, newName);
+		}
+	}
 }

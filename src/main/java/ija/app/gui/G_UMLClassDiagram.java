@@ -62,6 +62,9 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 		this.parent = parent;
 		selected = null;
 		wasEdited = false;
+		relations = new LinkedList<>();
+		classes = new LinkedList<>();
+
 		/* Prepare template */
 		root = new Group();
 		Group relationsGroup = new Group();
@@ -194,7 +197,6 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 		}
 
 		/* Create gui relations*/
-		relations = new LinkedList<>();
 		for(UMLRelation r : diagram.getRelations()){
 			G_UMLRelation gr = new G_UMLRelation(r, this);
 			relations.add(gr);
@@ -300,6 +302,9 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 					for(G_UMLClass c : classes)
 						c.update();
 					wasEdited = true;
+					System.out.println("Class: " + toChange.getName());
+					System.out.println("Own methods: " + diagram.getUMLClassOwnMethods(toChange.getName()));
+					System.out.println("Inherited methods: " + diagram.getUMLClassInheritedMethods(toChange.getName()));
 				}
 			}
 			else{
@@ -388,6 +393,9 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 	 * @param newName New name of class
 	 */
 	public void updatedClassName(String oldName, String newName){
+		try{
+			parent.updatedClassName(oldName, newName);
+		}catch(Exception ignored){}
 		for(UMLRelation rel : diagram.getRelations()) {
 			/* update to */
 			if (Objects.equals(rel.getTo(), oldName))
@@ -454,21 +462,22 @@ public class G_UMLClassDiagram implements HE_addAndDelete_T {
 		/* Add deletion to history */
 		History.addEvent(new HE_delete(this, toDel));
 		/* remove class from relations */
-		for(int i = 0; i<relations.size(); i++){
-			G_UMLRelation rel = relations.get(i);
-			if( Objects.equals(rel.getUMLRelation().getTo(), toDel.getName()) ||
-				Objects.equals(rel.getUMLRelation().getFrom(), toDel.getName())){
-				if(delRelation(rel)){
-					System.out.println("Deleted: " + rel.getUMLRelation().getName());
-					i--;
+		if(relations != null)
+			for(int i = 0; i<relations.size(); i++){
+				G_UMLRelation rel = relations.get(i);
+				if( Objects.equals(rel.getUMLRelation().getTo(), toDel.getName()) ||
+					Objects.equals(rel.getUMLRelation().getFrom(), toDel.getName())){
+					if(delRelation(rel)){
+						i--;
+					}
 				}
 			}
-		}
 		/* Delete class */
 		((Group)root.lookup("#classesGroup")).getChildren().remove(toDel.getNode());
 		classes.remove(toDel);
 		try{updateRelations();}
 		catch(Exception ignored){}
+
 		return diagram.delClass(toDel.getName());
 	}
 

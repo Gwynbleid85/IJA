@@ -150,12 +150,23 @@ public class UMLMessage {
      * @return from class
      */
     public String getClassFrom(){
-        String [] splitted = from.split(":");
-        return splitted[1];
+        String [] split = from.split(":");
+        return split[1];
+    }
+
+    public void setClassFrom(String newClassName){
+        String [] split = from.split(":");
+        from = split[0] + ":" + newClassName;
     }
 
     public String getClassTo() {
-        String [] splitted = to.split(":");
-        return splitted[1];
+        String [] split = to.split(":");
+        return split[1];
     }
+
+    public void setClassTo(String newClassName){
+        String [] split = to.split(":");
+        to = split[0] + ":" + newClassName;
+    }
+
 }

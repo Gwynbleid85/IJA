@@ -195,4 +195,6 @@ public class G_UMLInstanceDialog {
     private void setErr(String err){
         ((Label)template.lookup("#Error")).setText(err);
     }
+
+
 }

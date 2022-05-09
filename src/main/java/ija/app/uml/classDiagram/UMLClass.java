@@ -121,16 +121,5 @@ public class UMLClass {
 	}
 
 
-	@Override
-	public boolean equals(Object o) {
-		if(! (o instanceof UMLClass)) return false;
 
-		UMLClass c = (UMLClass) o;
-		return this.name.equals(c.name);
-	}
-
-	@Override
-	public int hashCode() {
-		return this.name.hashCode();
-	}
 }
